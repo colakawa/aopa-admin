@@ -11,16 +11,24 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Home
+      component: Home,
+      children: [
+        {
+          path: "/",
+          name: "tablelist",
+          component: () => import("./views/airport-manage/TableList.vue")
+        },
+        {
+          path: "userManage",
+          name: "tablelist",
+          component: () => import("./views/user-manage/TableList.vue")
+        }
+      ]
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () =>
-        import(/* webpackChunkName: "about" */ "./views/About.vue")
-    }
+      path: "/login",
+      name: "login",
+      component: () => import("./views/login.vue")
+    },
   ]
 });
