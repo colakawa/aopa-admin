@@ -107,7 +107,7 @@ export default {
 .table-wrap{
     width: 100%;
     height: 850px;
-    background-color: yellowgreen;
+    // background-color: yellowgreen;
     .table-sub-wrap {
         .table-data {
             border-collapse: collapse;

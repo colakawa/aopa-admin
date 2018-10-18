@@ -1,49 +1,73 @@
 <template>
     <div class="side-nav">
-        <div class="login">
-            登录成功
-        </div>
-        <ul>
-            <li><router-link to="/login">登录页面</router-link></li>
-            <li><router-link to="/userManage">用户管理</router-link></li>
-            <li>
-                <span>机场管理</span>
-                <ul>
-                    <li><router-link to="/">机场管理</router-link></li>
-                    <li><router-link to="/">取证机场管理</router-link></li>
-                </ul>
-            </li>
-            <li>
-                <span>内容管理</span>
-                <ul>
-                    <li><router-link to="/">问题管理</router-link></li>
-                    <li><router-link to="/" >公告管理</router-link></li>
-                    <li><router-link to="/">机场url链接管理</router-link></li>
-                    <li><router-link to="/">下载中心管理</router-link></li>
-                    <li><router-link to="/">导航管理</router-link></li>
-                    <li><router-link to="/">轮播管理</router-link></li>
-                </ul>
-            </li>
-        </ul>
+        <div class="login-success">登陆成功样式</div>
+        <Menu :open-names="['1']" accordion width="width">
+            <Submenu name="1">
+                <template slot="title">
+                    <Icon type="ios-paper" />
+                    用户管理
+                </template>
+                <!-- <MenuItem name="1-1">文章管理</MenuItem> -->
+            </Submenu>
+            <Submenu name="2">
+                <template slot="title">
+                    <Icon type="ios-people" />
+                    机场管理
+                </template>
+                <MenuItem name="2-1" to="/">机场管理</MenuItem>
+                <MenuItem name="2-2" to="/userManage">取证机场管理</MenuItem>
+            </Submenu>
+            <Submenu name="3">
+                <template slot="title">
+                    <Icon type="ios-stats" />
+                    内容管理
+                </template>
+                    <MenuItem name="3-1" to="/login">问题管理</MenuItem>
+                    <MenuItem name="3-2" to="/login">公告管理</MenuItem>
+                    <MenuItem name="3-3" to="/login">机场url链接管理</MenuItem>
+                    <MenuItem name="3-4" to="/login">下载中心管理</MenuItem>
+                    <MenuItem name="3-5" to="/login">导航管理</MenuItem>
+                    <MenuItem name="3-6" to="/login">轮播管理</MenuItem>
+            </Submenu>
+        </Menu>
     </div>
 </template>
+
+
 <script>
-export default {
-    
-}
+    export default {
+        data () {
+            return {
+                width: "12%"
+            }
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
     .side-nav {
         float: left;
-        width: 15%;
-        min-width: 160px;
+        width: 12%;
         height: 900px;
-        background-color: skyblue;
+        background-color: #284666;
+        .login-success {
+            color: #fff;
+            font-size: 26px;
+        }
+        ul {
+            color: #fff;
+            background-color: #284666;
+            li, a {
+                color: #fff;
+            }
+        }
         .login {
             font-size: 28px;
             border: 1px solid #000;
         }
+    }
+    .ivu-col ul[data-v-4425a5a6] {
+        width: 12%;
     }
     a {
         color: purple;

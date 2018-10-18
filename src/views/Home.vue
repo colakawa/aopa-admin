@@ -18,11 +18,10 @@
     width: 100%;
     .container{
         width: 100%;
-        min-width: 1100px;
+        min-width: 1200px;
         .content-right {
             display: inline-block;
-            width: 85%;
-            min-width: 900px;
+            width: 88%;
         }
     }
 }
