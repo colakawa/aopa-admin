@@ -42,11 +42,14 @@
                     </tr>
                 </tbody>
             </table>
+        <button @click="ajax">123</button>
+
         </div>
     </div>
 </template>
 
 <script>
+import axios from "axios"
 export default {
     data(){
         return {
@@ -98,6 +101,21 @@ export default {
                 }
             ]
         }
+    },
+    methods: {
+        ajax () {
+                axios.post("http://www.csairport.com/admin/Airport_manage/AdminAirportInfo",{
+                    token:"73b138217dbb8a287249e424328e6c45",
+                    pages: 1,
+                    page_name:10
+                })
+                .then(function (res) {
+                    console.log(res)
+                })
+                .catch(function(error) {
+                    console.log(error)
+                })
+            }
     }
 }
 </script>
