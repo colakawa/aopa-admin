@@ -24,9 +24,9 @@
         methods: {
             getBread(){
                 this.breadlist = this.$route.matched;
-                console.log(this.$route.matched)
+                // console.log(this.$route.matched)
                 this.$route.matched.forEach((item, index) => {
-                    console.log(item.path)
+                    // console.log(item.path)
                     item.meta.name === "首页" ? item.path = "/" : this.$route.path === item.path;
                 })
             }

@@ -1,15 +1,15 @@
 <template>
     <div class="side-nav">
-        <div class="login-success">登陆成功样式</div>
-        <Menu :open-names="["1"]" accordion width="width">
-            <!-- <Submenu name="1"> -->
-                <!-- <template slot="title">
-                    <Icon type="md-person" />
-                    用户管理
-                </template> -->
-                <MenuItem name="1-1" to="/userManage"><Icon type="md-person" />用户管理</MenuItem>
-            <!-- </Submenu> -->
-            <Submenu name="2">
+            <div class="login-success">登陆成功样式</div>
+            <Menu :open-names="['1']" accordion  width="width">
+                <!-- <Submenu name="1"> -->
+                    <!-- <template slot="title">
+                        <Icon type="ios-paper" />
+                        内容管理
+                    </template> -->
+                    <MenuItem name="1-1" to="/userManage"><Icon type="md-person" />用户管理</MenuItem>
+                <!-- </Submenu> -->
+                <Submenu name="2">
                 <template slot="title">
                     <Icon type="ios-paper-plane" />
                     机场管理
@@ -17,7 +17,7 @@
                 <MenuItem name="2-1" to="/">机场管理</MenuItem>
                 <MenuItem name="2-2" to="/userManage">取证机场管理</MenuItem>
             </Submenu>
-            <Submenu name="3">
+                <Submenu name="3">
                 <template slot="title">
                     <Icon type="md-bookmark" />
                     内容管理
@@ -29,10 +29,9 @@
                     <MenuItem name="3-5" to="/login"><Icon type="ios-volume-up" />导航管理</MenuItem>
                     <MenuItem name="3-6" to="/login"><Icon type="ios-volume-up" />轮播管理</MenuItem>
             </Submenu>
-        </Menu>
+            </Menu>
     </div>
 </template>
-
 
 <script>
     export default {

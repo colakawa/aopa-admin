@@ -42,14 +42,13 @@
                     </tr>
                 </tbody>
             </table>
-        <button @click="ajax">123</button>
 
         </div>
     </div>
 </template>
 
 <script>
-import axios from "axios"
+import axios from 'axios';
 export default {
     data(){
         return {
@@ -69,48 +68,23 @@ export default {
                     type: 1,
                     userid: 55,
                 },
-                {
-                    add_time: "2018-05-22 11:35:47",
-                    airid: 72,
-                    airport_name: "北京机场",
-                    airport_rank: "A1 ",
-                    airport_run: "北京八达岭机场管理有限公司",
-                    airport_type: "跑道型机场（兼表面直升机场）",
-                    mobile_phone: "13811282531",
-                    other_airport_type: "通用机场",
-                    release_time: "2018-05-22 11:35:55",
-                    save_time: "2018-07-23 10:53:40",
-                    status: "已发布",
-                    type: 1,
-                    userid: 55,
-                },
-                {
-                    add_time: "2018-05-22 11:35:47",
-                    airid: 80,
-                    airport_name: "北京海淀机场",
-                    airport_rank: "A1 ",
-                    airport_run: "北京八达岭机场管理有限公司",
-                    airport_type: "跑道型机场（兼表面直升机场）",
-                    mobile_phone: "13811282531",
-                    other_airport_type: "通用机场",
-                    release_time: "2018-05-22 11:35:55",
-                    save_time: "2018-07-23 10:53:40",
-                    status: "已发布",
-                    type: 1,
-                    userid: 55,
-                }
             ]
         }
     },
+    created() {
+       this.getData()
+    },
     methods: {
-        ajax () {
+            getData(){
+                let that = this;
                 axios.post("http://www.csairport.com/admin/Airport_manage/AdminAirportInfo",{
                     token:"73b138217dbb8a287249e424328e6c45",
                     pages: 1,
                     page_name:10
                 })
                 .then(function (res) {
-                    console.log(res)
+                    that.airportData = res.data.data
+                    console.log(that.airportData)
                 })
                 .catch(function(error) {
                     console.log(error)
