@@ -1,0 +1,44 @@
+/* ========================= 布局样式 start ========================= */
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-layout {
+  height: 100%;
+}
+.app-side-left {
+  position: fixed;
+  top: $heightHeader;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  width: $widthSideLeft;
+  background-color: #284666;
+}
+
+.app-side-main {
+  margin-left: $widthSideLeft;
+  position: relative;
+  overflow: auto;
+}
+
+.app-content {
+  height: calc(100vh - 50px);
+  min-width: 1000px;
+}
+.app-content-inside {
+  padding: 10px;
+}
+
+.app-footer {
+  height: $heightFooter;
+  margin-top: -$heightFooter;
+}
+
+/* ========================= 布局样式 end ========================= */

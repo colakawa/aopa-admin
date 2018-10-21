@@ -41,8 +41,9 @@
 
 <style lang="scss" scoped>
 .crumbs {
-    width: 100%;
-    padding: 5px;
+    background-color: #eee;
+    height: $heightCrumbs;
+    line-height: $heightCrumbs;
 }
 </style>
 

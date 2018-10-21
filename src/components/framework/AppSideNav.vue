@@ -45,10 +45,8 @@
 
 <style lang="scss" scoped>
     .side-nav {
-        float: left;
-        width: 12%;
-        height: 900px;
-        background-color: #284666;
+        height: 100%;
+        overflow: auto;
         .login-success {
             color: #fff;
             font-size: 26px;

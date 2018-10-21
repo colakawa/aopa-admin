@@ -3,10 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import iView from "iview";
 import "iview/dist/styles/iview.css";
-import "./assets/style/index.scss";
-import globalComponents from "./utils/global-components";
+import "./styles/index.scss";
 
-Vue.use(globalComponents);
 Vue.use(iView);
 
 Vue.config.productionTip = false;
