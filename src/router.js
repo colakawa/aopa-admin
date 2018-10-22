@@ -2,7 +2,10 @@ import Vue from "vue";
 import Router from "vue-router";
 import AppLayout from "./components/framework/AppLayout.vue";
 
-const Tablelist = () =>
+const UserTablelist = () =>
+  import(/* webpackChunkName: "Tablelist" */ "@/views/user-manage/TableList.vue");
+
+const AirportTablelist = () =>
   import(/* webpackChunkName: "Tablelist" */ "@/views/airport-manage/TableList.vue");
 
 const Login = () =>
@@ -21,13 +24,13 @@ export default new Router({
       children: [
         {
           path: "/",
-          name: "tablelist",
-          component: Tablelist
+          name: "AirportTablelist",
+          component: AirportTablelist
         },
         {
           path: "userManage",
-          name: "tablelist",
-          component: Tablelist
+          name: "UserTablelist",
+          component: UserTablelist
         }
       ]
     },

@@ -1,13 +1,14 @@
 <template>
-<div>
-    <Table border stripe :columns="columns7" :data="userData">
-    </Table>
-    <Page :total="100" 
-    :page-size="pageSize" 
-    @on-page-size-change="changePage"
-    show-sizer show-total/>
-</div>
-    
+    <div>
+        <Table border stripe :columns="columns" :data="userData">
+        </Table>
+        <Page :total="totalNum" 
+        :page-size="pageSize" 
+        :current="pages"
+        @on-change="handlePage"
+        @on-page-size-change="handlePageSize"
+        show-sizer show-total/>
+    </div>
 </template>
 <script>
 import axios from "axios"
@@ -15,7 +16,7 @@ import axios from "axios"
     export default {
         data () {
             return {
-                columns7: [
+                columns: [
                     // {
                     //     title: "Name",
                     //     key: "name",
@@ -91,7 +92,7 @@ import axios from "axios"
                                             this.show(params.index)
                                         }
                                     }
-                                }, '事件')
+                                }, '冻结')
                             ])
                         }
                     },
@@ -103,69 +104,11 @@ import axios from "axios"
                         title: "最后修改时间",
                         key: "last_save_time"
                     },
-                    
-                    // {
-                    //     title: "Action",
-                    //     key: "action",
-                    //     width: 150,
-                    //     align: "center",
-                    //     render: (h, params) => {
-                    //         return h("div", [
-                    //             h("Button", {
-                    //                 props: {
-                    //                     type: "primary",
-                    //                     size: "small"
-                    //                 },
-                    //                 style: {
-                    //                     marginRight: "5px"
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         this.show(params.index)
-                    //                     }
-                    //                 }
-                    //             }, "View"),
-                    //             h("Button", {
-                    //                 props: {
-                    //                     type: "error",
-                    //                     size: "small"
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         this.remove(params.index)
-                    //                     }
-                    //                 }
-                    //             }, "Delete")
-                    //         ]);
-                    //     }
-                    // }
-                ],
-                data6: [
-                    {
-                        name: "John Brown",
-                        age: 18,
-                        address: "New York No. 1 Lake Park"
-                    },
-                    {
-                        name: "Jim Green",
-                        age: 24,
-                        address: "London No. 1 Lake Park"
-                    },
-                    {
-                        name: "Joe Black",
-                        age: 30,
-                        address: "Sydney No. 1 Lake Park"
-                    },
-                    {
-                        name: "Jon Snow",
-                        age: 26,
-                        address: "Ottawa No. 2 Lake Park"
-                    }
                 ],
                 userData: [],
                 pageSize: 10, // 每页显示条数
-                pageCount: 0, //总条数
-                pages: 1 //当前页
+                totalNum: 0, //总条数
+                pages: 1 ,//当前页
             }
         },
         methods: {
@@ -182,30 +125,33 @@ import axios from "axios"
             getData(pageSize,pages){
                 let that = this;
                 axios.post("http://www.csairport.com/admin/index/adminUserInfo",{
-                    token:"dd4eba2fad49723084239198a4bb9dcd",
+                    token:"bbdd968782f7dd467b2e6846acae584b",
                     pages: pages,
                     page_num:pageSize
                 })
                 .then(function (res) {
                     that.userData = res.data.data
+                    that.totalNum = res.data.totalNum
                     this.dataCount = this.data.length;
                     this.nowData = [];
-                    console.log(that.userData)
+                    console.log(res)
                 })
                 .catch(function(error) {
                     console.log(error)
                 })
             },
+            handlePage(value){
+                this.pages = value;
+                this.changePage();
+            },
+            handlePageSize(value){
+                this.pageSize = value;
+                this.changePage();
+            },
             // 点击切换分页
             changePage(){
-                this.pageSize = 20;
-                this.pages = this.pages+1
-                getData(this.pageSize, this.pages)
-                console.log(this.pageSize, this.pages)
-                // let _start = (index - 1)*this.pageSize;
-                // let _end = index*this.pageSize;
-                // this.nowData = this.data.slice(_start, _end);
-                // this.pageCur = index;
+                var vm = this
+                this.getData(vm.pageSize, vm.pages)
             },
             _nowPageSize(index){
                 this.pageSize = index;

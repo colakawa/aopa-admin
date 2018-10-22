@@ -78,7 +78,7 @@ export default {
             getData(){
                 let that = this;
                 axios.post("http://www.csairport.com/admin/Airport_manage/AdminAirportInfo",{
-                    token:"73b138217dbb8a287249e424328e6c45",
+                    token:"bbdd968782f7dd467b2e6846acae584b",
                     pages: 1,
                     page_name:10
                 })
