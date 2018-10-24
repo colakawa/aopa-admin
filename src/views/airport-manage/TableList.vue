@@ -48,9 +48,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
-    data(){
+    data() {
         return {
             airportData: [
                 {
@@ -66,37 +66,41 @@ export default {
                     save_time: "2018-07-23 10:53:40",
                     status: "未发布",
                     type: 1,
-                    userid: 55,
-                },
+                    userid: 55
+                }
             ]
-        }
+        };
     },
     created() {
-       this.getData()
+        this.getData();
     },
     methods: {
-            getData(){
-                let that = this;
-                axios.post("http://www.csairport.com/admin/Airport_manage/AdminAirportInfo",{
-                    token:"bbdd968782f7dd467b2e6846acae584b",
-                    pages: 1,
-                    page_name:10
-                })
-                .then(function (res) {
-                    that.airportData = res.data.data
-                    console.log(that.airportData)
+        getData() {
+            let that = this;
+            axios
+                .post(
+                    "http://www.csairport.com/admin/Airport_manage/AdminAirportInfo",
+                    {
+                        token: "bbdd968782f7dd467b2e6846acae584b",
+                        pages: 1,
+                        page_name: 10
+                    }
+                )
+                .then(function(res) {
+                    that.airportData = res.data.data;
+                    console.log(that.airportData);
                 })
                 .catch(function(error) {
-                    console.log(error)
-                })
-            }
+                    console.log(error);
+                });
+        }
     }
-}
+};
 </script>
 
 
 <style lang="scss" scoped>
-.table-wrap{
+.table-wrap {
     width: 100%;
     height: 850px;
     // background-color: yellowgreen;
@@ -104,7 +108,7 @@ export default {
         .table-data {
             border-collapse: collapse;
             tbody {
-                tr{
+                tr {
                     td {
                         border: 1px solid #000;
                     }
@@ -114,4 +118,3 @@ export default {
     }
 }
 </style>
-

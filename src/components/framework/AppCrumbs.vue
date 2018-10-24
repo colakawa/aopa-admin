@@ -12,31 +12,33 @@
     </Breadcrumb>
 </template>
 <script>
-    export default {
-        created() {
+export default {
+    created() {
+        this.getBread();
+    },
+    data() {
+        return {
+            breadlist: ""
+        };
+    },
+    methods: {
+        getBread() {
+            this.breadlist = this.$route.matched;
+            // console.log(this.$route.matched)
+            this.$route.matched.forEach(item => {
+                // console.log(item.path)
+                item.meta.name === "首页"
+                    ? (item.path = "/")
+                    : this.$route.path === item.path;
+            });
+        }
+    },
+    watch: {
+        $route() {
             this.getBread();
-        },
-        data() {
-            return {
-                breadlist: ""
-            }
-        },
-        methods: {
-            getBread(){
-                this.breadlist = this.$route.matched;
-                // console.log(this.$route.matched)
-                this.$route.matched.forEach((item, index) => {
-                    // console.log(item.path)
-                    item.meta.name === "首页" ? item.path = "/" : this.$route.path === item.path;
-                })
-            }
-        },
-        watch: {
-            $route(){
-                this.getBread()
-            }
         }
     }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -46,4 +48,3 @@
     line-height: $heightCrumbs;
 }
 </style>
-

@@ -34,39 +34,40 @@
 </template>
 
 <script>
-    export default {
-        data () {
-            return {
-                width: "12%"
-            }
-        }
+export default {
+    data() {
+        return {
+            width: "12%"
+        };
     }
+};
 </script>
 
 <style lang="scss" scoped>
-    .side-nav {
-        height: 100%;
-        overflow: auto;
-        .login-success {
+.side-nav {
+    height: 100%;
+    overflow: auto;
+    .login-success {
+        color: #fff;
+        font-size: 26px;
+    }
+    ul {
+        color: #fff;
+        background-color: #284666;
+        li,
+        a {
             color: #fff;
-            font-size: 26px;
-        }
-        ul {
-            color: #fff;
-            background-color: #284666;
-            li, a {
-                color: #fff;
-            }
-        }
-        .login {
-            font-size: 28px;
-            border: 1px solid #000;
         }
     }
-    .ivu-col ul[data-v-4425a5a6] {
-        width: 12%;
+    .login {
+        font-size: 28px;
+        border: 1px solid #000;
     }
-    a {
-        color: purple;
-    }
+}
+.ivu-col ul[data-v-4425a5a6] {
+    width: 12%;
+}
+a {
+    color: purple;
+}
 </style>

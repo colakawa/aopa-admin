@@ -16,15 +16,15 @@
 </template>
 
 <script>
-import AppHeader from '@/components/framework/AppHeader.vue';
-import AppCrumbs from '@/components/framework/AppCrumbs.vue';
-import AppSideNav from '@/components/framework/AppSideNav.vue';
+import AppHeader from "@/components/framework/AppHeader.vue";
+import AppCrumbs from "@/components/framework/AppCrumbs.vue";
+import AppSideNav from "@/components/framework/AppSideNav.vue";
 
 export default {
     components: {
         AppHeader,
         AppCrumbs,
-        AppSideNav,
-    },
-}
+        AppSideNav
+    }
+};
 </script>
