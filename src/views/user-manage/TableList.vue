@@ -17,21 +17,6 @@ export default {
   data() {
     return {
       columns: [
-        // {
-        //     title: 'Name',
-        //     key: 'name',
-        //     render: (h, params) => { //自定义渲染当前列，包括渲染自定义组件，它基于 Vue 的 Render 函数
-        //     //render 函数传入两个参数，第一个是 h，第二个是对象，包含 row、column 和 index，分别指当前单元格数据，当前列数据，当前是第几行。
-        //         return h('div', [
-        //             h('Icon', {
-        //                 props: {
-        //                     type: 'person'
-        //                 }
-        //             }),
-        //             h('strong', params.row.name)
-        //         ]);
-        //     }
-        // },
         {
           title: 'ID',
           key: 'userid',
@@ -63,44 +48,51 @@ export default {
         {
           title: '操作',
           key: 'user_status',
-          render: (h, params) => h('div', [
-            h(
-              'Button',
-              {
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                },
-                style: {
-                  marginRight: '5px',
-                },
-                on: {
-                  click: () => {
-                    this.show(params.index);
-                  },
-                },
-              },
-              '查看',
-            ),
-            h(
-              'Button',
-              {
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                },
-                style: {
-                  // marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.show(params.index);
-                  },
-                },
-              },
-              '冻结',
-            ),
-          ]),
+          //自定义渲染当前列，包括渲染自定义组件，它基于 Vue 的 Render 函数
+          //render 函数传入两个参数，第一个是 h，第二个是对象，包含 row、column 和 index，分别指当前单元格数据，当前列数据，当前是第几行。
+          render: (h, params) => {
+            const text = params.row.user_status == '正常' ? '冻结':'解冻';
+
+            return h('div', [
+                    h(
+                      'Button',
+                      {
+                        props: {
+                          type: 'primary',
+                          size: 'small',
+                        },
+                        style: {
+                          marginRight: '5px',
+                        },
+                        on: {
+                          click: () => {
+                            this.show(params.index);
+                          },
+                        },
+                      },
+                      '查看',
+                    ),
+                    h(
+                      'Button',
+                      {
+                        props: {
+                          type: 'primary',
+                          size: 'small',
+                        },
+                        style: {
+                          backgroundColor:'#fff',
+                          color: 'blue',
+                        },
+                        on: {
+                          click: () => {
+                            this.handleUserStatus(params.index);
+                          },
+                        },
+                      },
+                      text,
+                    ),
+                  ])
+          }
         },
         {
           title: '注册时间',
@@ -118,11 +110,11 @@ export default {
     };
   },
   methods: {
-    show(index) {
+    handleUserStatus(index) {
       this.$Modal.info({
-        title: 'User Info',
+        title: '确定要执行此操作吗？',
         // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: index,
+        content: '确定要执行此操作吗？' + index,
       });
     },
     remove(index) {
@@ -130,13 +122,13 @@ export default {
     },
     getData(pageSize, pages) {
       const that = this;
-      this.$fetch.post('/admin/index/adminUserInfo', {
-        token: '258214faa129dd39fb0108c703dc3dd9',
+      this.$fetch.post('admin/index/adminUserInfo', {
+        token: this.$fetch.token,
         pages,
         page_num: pageSize,
       }).then(res => {
-        that.userData = res.data.data;
-        that.totalNum = res.data.totalNum;
+        that.userData = res.data;
+        that.totalNum = res.totalNum;
         this.dataCount = this.data.length;
         this.nowData = [];
         console.log(res);

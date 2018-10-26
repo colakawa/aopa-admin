@@ -8,6 +8,7 @@ const instance = axios.create({});
 let cancel = {};
 const promiseArr = {};
 const { CancelToken } = axios;
+const token = 'ebc4b9bb5380bc401743e91738056f3d';
 
 // 根据运行环境 配置 baseURL
 instance.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
@@ -40,11 +41,11 @@ instance.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel;
     }
-    console.info(
-      '%c 请求地址为：',
-      'font-size:14px;color:#5cb85c;font-weight:bold;',
-      config,
-    );
+    // console.info(
+    //   '%c 请求地址为：',
+    //   'font-size:14px;color:#5cb85c;font-weight:bold;',
+    //   config,
+    // );
     return config;
   },
   error => {
@@ -106,9 +107,10 @@ instance.interceptors.response.use(
   response => {
     // app.$Progress.finish();
     console.log(
-      '%c 请求结果为：',
-      'font-size:14px;color:#5cb85c;font-weight:bold;',
-      response,
+      // '%c 请求结果为：',
+      // 'font-size:14px;color:#5cb85c;font-weight:bold;',
+      // response,
+      '已请求到结果'
     );
     return response;
   },
@@ -178,4 +180,5 @@ export default {
       .then(response => checkStatus(response))
       .then(res => checkCode(res));
   },
+  token,
 };
