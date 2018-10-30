@@ -1,6 +1,6 @@
 const path = require('path');
 
-const url = 'http://csga.aopa.org.cn/';
+const url = 'http://ga.aopa.org.cn/';
 // const testUrl = 'http://www.airport.com/';
 
 function resolve(dir) {
