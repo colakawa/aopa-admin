@@ -10,7 +10,7 @@ const storeListLocal = {
 
 // 本地session存储 方法名与key值对应表
 const storeListSession = {
-  UserInfo: 'userInfo', // 用户信息
+  Token: 'token', // token
 };
 
 // 本地存储工厂函数，生成 set get remove 方法

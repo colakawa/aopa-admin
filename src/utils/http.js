@@ -2,13 +2,18 @@ import qs from 'qs';
 import axios from 'axios';
 // import app from '../main';
 
+import store from '@/utils/store';
+// TODO: 暂时存个死 token
+store.setToken('2eeff445121e6f4b8efa5ed65561ade0');
+
 // 创建实例
 const instance = axios.create({});
 
 let cancel = {};
 const promiseArr = {};
 const { CancelToken } = axios;
-const token = 'ebc4b9bb5380bc401743e91738056f3d';
+console.log(process.env, 'process.env');
+
 
 // 根据运行环境 配置 baseURL
 instance.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
@@ -30,10 +35,11 @@ instance.interceptors.request.use(
   config => {
     // loading
     // app.$Progress.start();
-    const token = localStorage.getItem('token') || '';
-    if (token) {
-      config.headers.Token = token;
-    }
+    // const token = localStorage.getItem('token') || '';
+
+    // if (token) {
+    //   config.headers.Token = token;
+    // }
     // 发起请求时，取消掉当前正在进行的相同请求
     if (promiseArr[config.url]) {
       promiseArr[config.url]('操作取消');
@@ -106,12 +112,11 @@ function handleErrMsg(error) {
 instance.interceptors.response.use(
   response => {
     // app.$Progress.finish();
-    console.log(
-      // '%c 请求结果为：',
-      // 'font-size:14px;color:#5cb85c;font-weight:bold;',
-      // response,
-      '已请求到结果'
-    );
+    // console.log(
+    // '%c 请求结果为：',
+    // 'font-size:14px;color:#5cb85c;font-weight:bold;',
+    // response,);
+    console.log('已请求到结果');
     return response;
   },
   error => {
@@ -180,5 +185,4 @@ export default {
       .then(response => checkStatus(response))
       .then(res => checkCode(res));
   },
-  token,
 };
