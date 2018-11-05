@@ -8,7 +8,7 @@
       <div class="app-content">
         <app-crumbs></app-crumbs>
         <div class="app-content-inside">
-          <router-view />
+          <router-view></router-view>
         </div>
       </div>
     </div>

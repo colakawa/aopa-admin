@@ -26,6 +26,7 @@ export default {
   methods: {
     getBread() {
       this.breadlist = this.$route.matched;
+      console.log(this.$route.matched, 'this.$route.matched;');
       // console.log(this.$route.matched)
       this.$route.matched.map(item => item);
     },

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import store from '@/utils/store';
 // TODO: 暂时存个死 token
-store.setToken('0b1c968537a11604acd6806d6b93dbe4');
+store.setToken('c0881485f8929367c820f919c314460e');
 
 // 创建实例
 const instance = axios.create({});
@@ -12,11 +12,10 @@ const instance = axios.create({});
 let cancel = {};
 const promiseArr = {};
 const { CancelToken } = axios;
-console.log(process.env, 'process.env');
 
 
 // 根据运行环境 配置 baseURL
-instance.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
+// instance.defaults.baseURL = process.env.VUE_APP_AXIOS_BASE_URL;
 
 // 设置请求默认属性
 instance.defaults.timeout = 10000;
@@ -110,15 +109,16 @@ function handleErrMsg(error) {
 
 // 请求完成之后的拦截处理
 instance.interceptors.response.use(
-  response => {
+  response =>
     // app.$Progress.finish();
-    // console.log(
-    // '%c 请求结果为：',
-    // 'font-size:14px;color:#5cb85c;font-weight:bold;',
-    // response,);
-    console.log('已请求到结果');
-    return response;
-  },
+  //     console.log(
+  //       '%c 请求结果为：',
+  //       'font-size:14px;color:#5cb85c;font-weight:bold;',
+  //       response
+  // );
+    // console.log('已请求到结果');
+    response
+  ,
   error => {
     // app.$Progress.fail();
     handleErrMsg(error);

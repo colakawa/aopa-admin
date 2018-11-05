@@ -1,5 +1,5 @@
 <template>
   <div>
-    我是详情页
+    <router-view></router-view>
   </div>
 </template>

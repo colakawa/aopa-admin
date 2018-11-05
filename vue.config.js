@@ -9,7 +9,7 @@ function resolve(dir) {
 
 module.exports = {
   // lintOnSave: false,
-  baseUrl: process.env.NODE_ENV === 'development' ? '' : 'http://ga.aopa.org.cn/',
+  baseUrl: process.env.BASE_URL,
   devServer: {
     port: 8081,
     open: true, // 配置自动启动浏览器
