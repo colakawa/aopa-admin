@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import store from '@/utils/store';
 // TODO: 暂时存个死 token
-store.setToken('c0881485f8929367c820f919c314460e');
+store.setToken('334c20b4bb33a2ca266c39d3780c60d8');
 
 // 创建实例
 const instance = axios.create({});

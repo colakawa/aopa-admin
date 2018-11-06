@@ -17,8 +17,7 @@
         </FormItem>
         <FormItem label="状态" prop="nav_status">
             <Select v-model="formValidate.nav_status">
-                <Option value="1">正常</Option>
-                <Option value="2">隐藏</Option>
+                <Option v-for="item in statusList" :key="item.id" :value="item.id"> {{ item.name }} </Option>
             </Select>
         </FormItem>
         <FormItem label="排序" prop="rank">
@@ -36,6 +35,10 @@
             return {
                 nav_id: '',
                 OneNavData: [],
+                statusList: [
+                  {id: 1, name: '正常'},
+                  {id: 2, name: '隐藏'},
+                ],
                 formValidate: {
                     nav_name: '',
                     url: '',
@@ -43,21 +46,21 @@
                     nav_status: 1,
                     rank: ''
                 },
-                ruleValidate: {
+                ruleValidate: {  // 表单校验规则
                     nav_name: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        { required: true, message: '请填写导航名称', trigger: 'blur' }
                     ],
                     url: [
-                        { required: true, message: 'Please select the city', trigger: 'change' }
+                        { required: true, message: '请填写url地址', trigger: 'change' }
                     ],
                     pid: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: '', trigger: 'none', type: 'number' }
                     ],
                     nav_status: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: '', trigger: 'none', type: 'number' }
                     ],
                     rank: [
-                        { required: true, message: '????', trigger: 'none' }
+                        { required: true, message: '', trigger: 'none', type: 'number' }
                     ],
                 }
             }
@@ -66,6 +69,7 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                      console.log(valid, 'valid')
                         this.$Message.success('Success!');
                     } else {
                         this.$Message.error('Fail!');
@@ -84,7 +88,6 @@
                   nav_id: this.nav_id
                 })
                 .then(res => {
-                  // that.navData = res.data;
                   that.formValidate.nav_name = res.data.nav_name;
                   that.formValidate.url = res.data.url;
                   that.formValidate.pid = res.data.pid;
@@ -96,7 +99,7 @@
                   console.log(error);
                 });
               },
-            //---------获取上级导航数据-----------//admin/Nav_manage/getOneNav
+            //---------获取上级导航数据-----------//
             getOneNavData() {
               const that = this;
               this.$fetch
@@ -113,8 +116,10 @@
               },
         },
         created(){
-          this.nav_id = this.$route.query.navId;
-          this.getData()
+          if(this.$route.query.navId != ''){
+            this.nav_id = this.$route.query.navId;
+            this.getData()
+          }
           this.getOneNavData();
         }
     }

@@ -12,9 +12,7 @@
         </FormItem>
         <FormItem label="状态" prop="status">
             <Select v-model="formValidate.status">
-                <Option value="beijing">New York</Option>
-                <Option value="shanghai">London</Option>
-                <Option value="shenzhen">Sydney</Option>
+                <Option v-for="item in statusList" :value="item.id"> {{item.name}} </Option>
             </Select>
         </FormItem>
         <FormItem>
@@ -27,6 +25,11 @@
     export default {
         data () {
             return {
+               airUrlId: '',
+               statusList: [
+                  {id: 1, name: '显示'},
+                  {id: 2, name: '不显示'},
+                ],
                 formValidate: {
                     airport_name: '',
                     air_url: '',
@@ -61,8 +64,34 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            //---------获取数据-----------//
+            getDetailData(airUrlId) {
+              const that = this;
+              this.$fetch
+                .post('/admin/Air_url_manage/getAirUrl', {
+                  token: this.$stores.getToken(),
+                  air_url_id: this.airUrlId
+                })
+                .then(res => {
+                  that.formValidate.airport_name = res.data.airport_name;
+                  that.formValidate.air_url = res.data.air_url;
+                  that.formValidate.status = res.data.status;
+                  that.formValidate.rank = res.data.rank;
+                  console.log(res, 'res');
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            },
+        },
+         created(){
+            if(this.$route.query.airUrlId != ''){
+              this.airUrlId = this.$route.query.airUrlId;
+              this.getDetailData()
             }
-        }
+            // this.getOneNavData();
+          }
     }
 </script>
 
