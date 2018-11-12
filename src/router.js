@@ -31,6 +31,12 @@ const NavTablelist = () =>
 const CarouselTablelist = () =>
   import(/* webpackChunkName: "CarouselTablelist" */ '@/views/manage-carousel/TableList.vue');
 
+const OtherAirportTablelist = () =>
+    import(/* webpackChunkName: "OtherAirportTablelist" */ '@/views/manage-otherairport/TableList.vue');
+
+const CodeTablelist = () =>
+      import(/* webpackChunkName: "CodeTablelist" */ '@/views/manage-invitationcode/TableList.vue');
+
 // 三级路由
 
 const CarouselDetail = () =>
@@ -56,6 +62,9 @@ const UserDetail = () =>
 
 const EvidenceDetail = () =>
   import(/* webpackChunkName: "EvidenceDetail" */ '@/views/manage-evidence/details/evidenceDetail.vue');
+
+// const OtherAirportDetail = () =>
+//     import( /* webpackChunkName: "OtherAirportDetail" */ '@/views/manage-otherairport/details/otherairportDetail.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "Login" */ '@/views/user/login.vue');
@@ -123,6 +132,24 @@ export default new Router({
               name: '取证机场详情',
               component: EvidenceDetail,
             },
+          ],
+        },
+        {
+          path: 'otherAirportManage',
+          name: '起降场发布审核',
+          redirect: '/otherAirportManage',
+          component: RouterView,
+          children: [
+            {
+              path: '/',
+              name: '',
+              component: OtherAirportTablelist,
+            },
+            // {
+            //   path: 'evidenceDetail',
+            //   name: '取证机场详情',
+            //   component: EvidenceDetail,
+            // },
           ],
         },
         // 问题管理
@@ -223,6 +250,25 @@ export default new Router({
               name: '轮播详情',
               component: CarouselDetail,
             },
+          ],
+        },
+        // 邀请码管理
+        {
+          path: 'codeManage',
+          name: '邀请码管理',
+          redirect: '/codeManage',
+          component: RouterView,
+          children: [
+            {
+              path: '/',
+              name: '',
+              component: CodeTablelist,
+            },
+            // {
+            //   path: 'carouselDetail',
+            //   name: '轮播详情',
+            //   component: CarouselDetail,
+            // },
           ],
         },
       ],

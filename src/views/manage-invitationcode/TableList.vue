@@ -8,14 +8,16 @@
             <span>邀请码</span>
             <input type="text" placeholder="模糊匹配查询" name="code" class="filter-input">
           </Col>
-          <Col span="8" v-if="value == '1'">
+          <Col span="6">
+            <span>状态</span>
             <select name="status" class="filter-select">
-              <option v-for="status in statusList"
-                :key="status.id"
-                :value="status.id" >{{ status.name }}</option>
+              <option v-for="item in statusList"
+                :key="item.id"
+                :value="item.id" >{{ item.name }}</option>
             </select>
           </Col>
-          <Col span="4" v-if="value == '1'">
+          <Col span="12">
+            <span>生成日期</span>
             <DatePicker type="datetime" id="create_date" placeholder="YYYY-MM-DD" style="width: 200px" v-model="create_date"></DatePicker>
           </Col>
         </Row>
@@ -40,29 +42,21 @@
             <th>操作</th>
           </tr>
         </thead>
-        <!-- <tbody>
+        <tbody>
           <tr v-for="item in airportData" :key="item.airid">
-            <td>{{ item.airid }}</td>
-            <td>{{ item.airport_name }}</td>
-            <td>{{ item.other_airport_type }}</td>
-            <td>{{ item.airport_type }}</td>
-            <td>{{ item.airport_rank }}</td>
-            <td>{{ item.airport_run }}</td>
-            <td>{{ item.mobile_phone }}</td>
+            <td>{{ item.invitation_code_id }}</td>
+            <td>{{ item.invitation_code }}</td>
             <td>{{ item.status }}</td>
+            <td>{{ item.create_date }}</td>
+            <td>{{ item.use_date }}</td>
+            <td>{{ item.userid }}</td>
+            <td>{{ item.airid }}</td>
+            <td>{{ item.remark }}</td>
             <td class="table-operation">
-              <span @click="handleStatus(item.airid, item.status)"
-                v-if="item.status == '冻结' || item.status == '下线'">上线</span>
-              <span @click="handleStatus(item.airid, item.status)"
-                v-if="item.status == '已发布' || item.status == '在线' || item.status == '已取证'">下线</span>
-              <span v-if="item.status == '已发布' || item.status == '在线'">变更所属</span>
-              <span v-if="item.type == '1'">查看</span>
-              <span v-if="item.type == '2'" @click="routerDetail(item.airid)">编辑</span>
+              <span v-if="item.status != '作废'">作废</span>
             </td>
-            <td>{{ item.release_time }}</td>
-            <td>{{ item.save_time }}</td>
           </tr>
-        </tbody> -->
+        </tbody>
       </table>
       <Page
         :total="totalNum"
@@ -116,7 +110,7 @@ export default {
     },
      // 点击编辑-----路由跳转
     routerDetail(id){
-      this.$router.push({path: 'airportManage/airportDetail', query: {airId: id}})
+      // this.$router.push({path: 'airportManage/airportDetail', query: {airId: id}})
     },
     handlePage(value) {
       this.pages = value;
@@ -135,37 +129,41 @@ export default {
       console.log(val, '123');
     },
     // 操作
-    handleStatus(airid, status){
-      const that = this;
-      this.$swal({
-        title: '确定要执行此操作吗？',
-        text: '',
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "确定！",
-        cancelButtonText:"取消",
-      }).then((dismiss) => {
-         if(dismiss.value){
-           that.$fetch.post('/admin/Airport_manage/saveAirportStatus', {
-             token: that.$stores.getToken(),
-             airid: airid,
-             status: status,
-           })
-           .then(res => {
-             that.getData();
-           })
-           .catch(error => {
-             console.log(error)
-           })
-         }else {
-           return ;
-         }
-      })
-    }
+    // handleStatus(airid, status){
+    //   const that = this;
+    //   this.$swal({
+    //     title: '确定要执行此操作吗？',
+    //     text: '',
+    //     type: "warning",
+    //     showCancelButton: true,
+    //     confirmButtonColor: "#DD6B55",
+    //     confirmButtonText: "确定！",
+    //     cancelButtonText:"取消",
+    //   }).then((dismiss) => {
+    //      if(dismiss.value){
+    //        that.$fetch.post('/admin/Airport_manage/saveAirportStatus', {
+    //          token: that.$stores.getToken(),
+    //          airid: airid,
+    //          status: status,
+    //        })
+    //        .then(res => {
+    //          that.getData();
+    //        })
+    //        .catch(error => {
+    //          console.log(error)
+    //        })
+    //      }else {
+    //        return ;
+    //      }
+    //   })
+    // }
   },
   created() {
     this.getData();
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import '@/styles/framework/tableListCommon.scss';
+</style>
