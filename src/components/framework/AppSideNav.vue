@@ -7,15 +7,16 @@
                         <Icon type="ios-paper" />
                         内容管理
                     </template> -->
-      <MenuItem name="1-1" to="/userManage"><Icon type="md-person" />用户管理</MenuItem>
+      <MenuItem name="1-1" to="/"><Icon type="md-person" />用户管理</MenuItem>
       <!-- </Submenu> -->
       <Submenu name="2">
         <template slot="title">
           <Icon type="ios-paper-plane" />
           机场管理
         </template>
-        <MenuItem name="2-1" to="/">机场管理</MenuItem>
+        <MenuItem name="2-1" to="/airportManage">机场管理</MenuItem>
         <MenuItem name="2-2" to="/evidenceManage">取证机场管理</MenuItem>
+        <MenuItem name="2-3" to="/evidenceManage">起降场发布审核</MenuItem>
       </Submenu>
       <Submenu name="3">
         <template slot="title">
@@ -28,6 +29,7 @@
         <MenuItem name="3-4" to="/downloadManage"><Icon type="ios-volume-up" />下载中心管理</MenuItem>
         <MenuItem name="3-5" to="/navManage"><Icon type="ios-volume-up" />导航管理</MenuItem>
         <MenuItem name="3-6" to="/carouselManage"><Icon type="ios-volume-up" />轮播管理</MenuItem>
+        <MenuItem name="3-7" to="/carouselManage"><Icon type="ios-volume-up" />邀请码管理</MenuItem>
       </Submenu>
     </Menu>
   </div>

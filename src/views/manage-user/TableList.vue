@@ -71,9 +71,9 @@
             <td>{{ item.username }}</td>
             <td>{{ item.user_status }}</td>
             <td class="table-operation">
-              <span v-if="item.user_status == '正常'">冻结</span>
-              <span v-if="item.user_status == '冻结'">解冻</span>
-              <span>查看</span>
+              <span v-if="item.user_status == '正常'" @click="handleStatus(item.userid, item.user_status)">冻结</span>
+              <span v-if="item.user_status == '冻结'" @click="handleStatus(item.userid, item.user_status)">解冻</span>
+              <span @click="routerDetail(item.userid)">查看</span>
             </td>
             <td>{{ item.add_time }}</td>
             <td>{{ item.last_save_time }}</td>
@@ -113,6 +113,7 @@ export default {
     remove(index) {
       this.data6.splice(index, 1);
     },
+    // 获取列表数据
     getData(pageSize, pages) {
       const that = this;
       this.$fetch
@@ -131,6 +132,39 @@ export default {
           console.log(error);
         });
     },
+    // 操作
+    handleStatus(userid, status){
+      const that = this;
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+         if(dismiss.value){
+           that.$fetch.post('/admin/index/saveUserStatus', {
+             token: that.$stores.getToken(),
+             userid: userid,
+             user_status: status,
+           })
+           .then(res => {
+             that.getData();
+           })
+           .catch(error => {
+             console.log(error)
+           })
+         }else {
+           return ;
+         }
+      })
+    },
+    // 点击查看-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: '/userDetail', query: {userId: id}})
+    },
     handlePage(value) {
       this.pages = value;
       this.changePage();
@@ -143,9 +177,6 @@ export default {
     changePage() {
       const vm = this;
       this.getData(vm.pageSize, vm.pages);
-    },
-    _nowPageSize(index) {
-      this.pageSize = index;
     },
   },
   created() {

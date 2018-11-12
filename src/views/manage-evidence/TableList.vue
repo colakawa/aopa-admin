@@ -13,6 +13,7 @@
           <select name="airport_type" id="airport_type" class="filter-select">
             <option
               v-for="airportType in airportTypeList"
+              :key="airportType.id"
               :value="airportType.id"
             >{{ airportType.name }}</option>
           </select>
@@ -34,7 +35,7 @@
       </div>
     </div>
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">机场管理 <span class="add-button" @click="routerDetail('')">添加取证机场</span> </p>
       <table class="table-data">
         <thead>
           <tr>
@@ -51,7 +52,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in certificateLogData" :key="item.airid">
+          <tr v-for="item in certificateLogData"
+          :key="item.certificate_log_id"
+          @click="routerDetail(item.certificate_log_id)">
             <td>{{ item.certificate_log_id }}</td>
             <td>{{ item.licence_num }}</td>
             <td>{{ item.airport_name }}</td>
@@ -86,21 +89,6 @@ export default {
       pageSize: 10, // 每页显示条数
       totalNum: 0, // 总条数
       pages: 1, // 当前页
-      provinceList: {
-        // 地区省份二级联动
-        '': ['省/直辖市（全部）', '黑龙江省', '吉林省', '辽宁省', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省',
-          '上海市', '浙江省', '山东省', '江苏省', '福建省', '江西省', '安徽省', '湖北省', '广西壮族自治区', '广东省', '河南省', '海南省',
-          '湖南省', '甘肃省', '青海省', '陕西省', '宁夏回族自治区', '重庆市', '云南省', '四川省', '贵州省', '西藏自治区',
-          '新疆维吾尔自治区',
-        ],
-        3: ['省/直辖市（全部）', '黑龙江省', '吉林省', '辽宁省'],
-        1: ['省/直辖市（全部）', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省'],
-        4: ['省/直辖市（全部）', '上海市', '浙江省', '山东省', '江苏省', '福建省', '江西省', '安徽省'],
-        6: ['省/直辖市（全部）', '湖北省', '广西壮族自治区', '广东省', '河南省', '海南省', '湖南省'],
-        2: ['省/直辖市（全部）', '甘肃省', '青海省', '陕西省', '宁夏回族自治区'],
-        5: ['省/直辖市（全部）', '重庆市', '云南省', '四川省', '贵州省', '西藏自治区'],
-        7: ['省/直辖市（全部）', '新疆维吾尔自治区'],
-      },
       airportTypeList: [ // 机场类型
         { id: '', name: '机场类型（全部）' },
         { id: 1, name: '跑道型机场' },
@@ -118,18 +106,8 @@ export default {
     };
   },
   methods: {
-    handleUserStatus(index) {
-      console.log(this.$Modal);
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    remove(index) {
-      this.data6.splice(index, 1);
-    },
-    getData(pageSize, pages) {
+    // 获取列表数据
+    getListData(pageSize, pages) {
       const that = this;
       this.$fetch.post('admin/Promulgate_airport_manage/certificateLogList', {
         token: this.$stores.getToken(),
@@ -138,7 +116,6 @@ export default {
       }).then(res => {
         that.certificateLogData = res.data;
         that.totalNum = res.totalNum;
-        this.nowData = [];
         console.log(res);
       }).catch(error => {
         console.log(error);
@@ -155,17 +132,18 @@ export default {
     // 点击切换分页
     changePage() {
       const vm = this;
-      this.getData(vm.pageSize, vm.pages);
-    },
-    _nowPageSize(index) {
-      this.pageSize = index;
+      this.getListData(vm.pageSize, vm.pages);
     },
     changeCertificateUnit(val, type) {
       console.log(val, '123');
     },
+    // 查看详情，创建机场-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'evidenceManage/evidenceDetail', query: {evidenceId: id}})
+    },
   },
   created() {
-    this.getData();
+    this.getListData();
   },
 };
 </script>

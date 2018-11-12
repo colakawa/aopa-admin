@@ -13,7 +13,8 @@
     "qs": "^6.5.2",
     "vue": "^2.5.17",
     "vue-layer": "^0.9.10",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue-sweetalert2": "^1.5.7"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.5",

@@ -15,9 +15,10 @@
         </FormItem>
         <FormItem label="状态" prop="carousel_status">
             <Select v-model="formValidate.carousel_status">
-                <Option value="beijing">New York</Option>
-                <Option value="shanghai">London</Option>
-                <Option value="shenzhen">Sydney</Option>
+                <Option v-for="status in statusList"
+                :key="status.id"
+                :value="status.id"> {{status.name}} </Option>
+
             </Select>
         </FormItem>
         <FormItem>
@@ -30,6 +31,7 @@
     export default {
         data () {
             return {
+                carousel_id: '',
                 formValidate: {
                     carousel_title: '',
                     sort: '',
@@ -50,7 +52,11 @@
                     carousel_status: [
                         { required: true, message: 'Please select gender', trigger: 'change' }
                     ],
-                }
+                },
+                statusList:[
+                  {id: 1, name: '正常'},
+                  {id: 2, name: '删除'},
+                ]
             }
         },
         methods: {
@@ -65,7 +71,31 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            // 获取详情数据
+            getData(carousel_id){
+              const that = this;
+              this.$fetch
+                .post('/admin/Carousel_manage/getCarouselDetails', {
+                  token: this.$stores.getToken(),
+                  carousel_id: this.carousel_id
+                })
+                .then(res => {
+                  for(let i in that.formValidate){
+                    that.formValidate[i] = res.data[i];
+                  }
+                  console.log(res, 'res');
+                })
+                .catch(error => {
+                  console.log(error);
+                });
             }
+        },
+        created(){
+          if(this.$route.query.carouselId != ''){
+            this.carousel_id = this.$route.query.carouselId;
+            this.getData();
+          }
         }
     }
 </script>

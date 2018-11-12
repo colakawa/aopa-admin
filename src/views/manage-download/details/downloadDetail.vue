@@ -9,30 +9,26 @@
         </FormItem>
         <FormItem label="下载内容类型" prop="download_type">
             <Select v-model="formValidate.download_type">
-                <Option value="beijing">New York</Option>
-                <Option value="shanghai">London</Option>
-                <Option value="shenzhen">Sydney</Option>
+                <Option v-for="item in typeList" :key="item.id" :value="item.id"> {{item.name}} </Option>
             </Select>
         </FormItem>
         <FormItem label="状态" prop="download_status">
             <Select v-model="formValidate.download_status">
-                <Option value="beijing">New York</Option>
-                <Option value="shanghai">London</Option>
-                <Option value="shenzhen">Sydney</Option>
+                <Option v-for="item in statusList" :key="item.id" :value="item.id"> {{item.name}} </Option>
             </Select>
         </FormItem>
         <FormItem label="实施时间" prop="applying_time">
-            <DatePicker type="datetime" placeholder="Select date and time" v-model="formValidate.applying_time"></DatePicker>
+            <DatePicker type="date" placeholder="YYYY-MM-DD" v-model="formValidate.applying_time"></DatePicker>
         </FormItem>
         <FormItem label="创建时间" prop="add_time">
-            <DatePicker type="datetime" placeholder="Select date and time" v-model="formValidate.add_time"></DatePicker>
+            <DatePicker type="date" placeholder="YYYY-MM-DD" v-model="formValidate.add_time"></DatePicker>
         </FormItem>
         <FormItem label="修改时间" prop="update_time">
-            <DatePicker type="datetime" placeholder="Select date and time" v-model="formValidate.update_time"></DatePicker>
+            <DatePicker type="date" placeholder="YYYY-MM-DD" v-model="formValidate.update_time"></DatePicker>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">保存内容</Button>
+            <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
         </FormItem>
     </Form>
 </template>
@@ -59,15 +55,24 @@
                         { required: true, message: 'Please select gender', trigger: 'change' }
                     ],
                     applying_time: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: 'Please select gender', trigger: 'none' }
                     ],
                     add_time: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: 'Please select gender', trigger: 'none' }
                     ],
                     update_time: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: 'Please select gender', trigger: 'none' }
                     ],
-                }
+                },
+                download_id: '',
+                typeList: [
+                  {id: 1, name: 'pdf'},
+                  {id: 2, name: 'zip'},
+                ],
+                statusList: [
+                  {id: 1, name: '发布'},
+                  {id: 2, name: '冻结'},
+                ],
             }
         },
         methods: {
@@ -82,7 +87,31 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
+            },
+            // 获取详情数据
+            getData (download_id){
+              const that = this;
+              this.$fetch
+                .post('/admin/Downloads_manage/getDownload', {
+                  token: this.$stores.getToken(),
+                  download_id: this.download_id
+                })
+                .then(res => {
+                  for(let i in that.formValidate){
+                    that.formValidate[i] = res.data[i];
+                  }
+                  console.log(res, 'res');
+                })
+                .catch(error => {
+                  console.log(error);
+                });
             }
+        },
+        created(){
+          if(this.$route.query.downloadId != ''){
+            this.download_id = this.$route.query.downloadId;
+            this.getData();
+          }
         }
     }
 </script>

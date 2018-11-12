@@ -1,7 +1,7 @@
 <template>
   <div class="table-wrap">
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">下载管理<span class="add-button" @click="routerDetail('')">+添加</span></p>
       <table class="table-data">
         <thead>
           <tr>
@@ -22,8 +22,8 @@
             <td>{{ item.download_type }}</td>
             <td>{{ item.download_status_msg }}</td>
             <td class="table-operation">
-              <span>编辑</span>
-              <span>删除</span>
+              <span @click="routerDetail(item.download_id)">编辑</span>
+              <span @click="deleteFile(item.download_id)">删除</span>
             </td>
             <td>{{ item.add_time }}</td>
             <td>{{ item.applying_time }}</td>
@@ -54,16 +54,7 @@ export default {
     };
   },
   methods: {
-    handleUserStatus(index) {
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    remove(index) {
-      this.data6.splice(index, 1);
-    },
+    //----------获取列表数据------------//
     getData(pageSize, pages) {
       const that = this;
       this.$fetch
@@ -82,6 +73,7 @@ export default {
           console.log(error);
         });
     },
+    // 选择分页当前页
     handlePage(value) {
       this.pages = value;
       this.changePage();
@@ -95,9 +87,38 @@ export default {
       const vm = this;
       this.getData(vm.pageSize, vm.pages);
     },
-    _nowPageSize(index) {
-      this.pageSize = index;
+    // 编辑路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'downloadManage/downloadDetail', query: {downloadId: id}})
     },
+    // 删除下载文件TODO:未测试
+    deleteFile(download_id){
+      const that = this;
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+         if(dismiss.value){
+           that.$fetch.post('/admin/Downloads_manage/removeDownload', {
+             token: that.$stores.getToken(),
+             download_id: download_id,
+           })
+           .then(res => {
+             that.getData();
+           })
+           .catch(error => {
+             console.log(error)
+           })
+         }else {
+           return ;
+         }
+      })
+    }
   },
   created() {
     this.getData();

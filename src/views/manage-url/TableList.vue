@@ -50,7 +50,7 @@ export default {
       const that = this;
       this.$fetch
         .post('admin/Air_url_manage/getAirUrlList', {
-          token: this.$stores.getToken(),
+          token: that.$stores.getToken(),
         })
         .then(res => {
           that.urlData = res.data;
@@ -63,42 +63,71 @@ export default {
     //---------list操作,显示状态--------//
     changeShowStatus(air_url_id, status){
       const that = this;
-      this.$fetch.post('/admin/Air_url_manage/saveAirUrl', {
-        token: this.$stores.getToken(),
-        air_url_id: air_url_id,
-        status: status,
-      })
-      .then(res => {
-        // console.log(status)
-        if(status === 1){ this.urlData.status == '不显示'}
-        if(status === 2){ this.urlData.status == '显示'}
-        this.getData();
-      })
-      .catch(error => {
-        console.log(error)
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+        if(dismiss.value){
+          that.$fetch.post('/admin/Air_url_manage/saveAirUrl', {
+            token: that.$stores.getToken(),
+            air_url_id: air_url_id,
+            status: status,
+          })
+          .then(res => {
+            // console.log(status)
+            if(status === 1){ that.urlData.status == '不显示'}
+            if(status === 2){ that.urlData.status == '显示'}
+            that.getData();
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        }else {
+          return ;
+        }
+
       })
     },
     //---------list操作,删除与恢复--------//
     changeUrlStatus(air_url_id, status){
       const that = this;
-      this.$fetch.post('/admin/Air_url_manage/saveAirUrl', {
-        token: this.$stores.getToken(),
-        air_url_id: air_url_id,
-        status: status,
-      })
-      .then(res => {
-        console.log(status)
-        if(status === 9){ this.urlData.status == '恢复'}
-        if(status === 2){ this.urlData.status == '删除'}
-        this.getData();
-      })
-      .catch(error => {
-        console.log(error)
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+        if(dismiss.value){
+          that.$fetch.post('/admin/Air_url_manage/saveAirUrl', {
+            token: that.$stores.getToken(),
+            air_url_id: air_url_id,
+            status: status,
+          })
+          .then(res => {
+            console.log(status)
+            if(status === 9){ this.urlData.status == '恢复'}
+            if(status === 2){ this.urlData.status == '删除'}
+            this.getData();
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        }else {
+          return ;
+        }
       })
     },
     // 点击编辑&添加-----路由跳转
     routerDetail(id){
-      this.$router.push({path: 'urlManage/urlDeatail', query: {airUrlId: id}})
+      this.$router.push({path: 'urlManage/urlDetail', query: {airUrlId: id}})
     },
   },
   created() {

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import iView from 'iview';
-import layer from 'vue-layer';
+import VueSweetalert2 from 'vue-sweetalert2';
 import stores from '@/utils/store';
 import 'iview/dist/styles/iview.css';
 import App from './App.vue';
@@ -9,8 +9,7 @@ import './styles/index.scss';
 import Http from './utils/http';
 
 Vue.use(iView);
-// vue 原型上添加 layer
-Vue.prototype.$layer = layer(Vue);
+Vue.use(VueSweetalert2);
 
 // vue 原型上添加 http 方法
 Vue.prototype.$fetch = Http;

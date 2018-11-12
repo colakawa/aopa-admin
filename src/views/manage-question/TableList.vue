@@ -71,9 +71,10 @@
             <td>{{ item.mobile_phone }}</td>
             <td>{{ item.question_status_msg }}</td>
             <td class="table-operation">
-              <span v-if="item.question_status == '1'">编辑</span>
-              <span v-if="item.question_status == '1'">忽略</span>
-              <span v-if="item.question_status == '2' || item.question_status == '3'">查看</span>
+              <span v-if="item.question_status == '1'" @click="routerDetail(item.question_id)">编辑</span>
+              <span v-if="item.question_status == '1'" @click="ignoreQuestion(item.question_id, item.question_status)">忽略</span>
+              <span v-if="item.question_status == '2' || item.question_status == '3'"
+              @click="routerDetail(item.question_id)">查看</span>
             </td>
             <td>{{ item.add_time }}</td>
             <td>{{ item.solve_time }}</td>
@@ -103,16 +104,7 @@ export default {
     };
   },
   methods: {
-    handleUserStatus(index) {
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    remove(index) {
-      this.data6.splice(index, 1);
-    },
+    // 获取列表数据
     getData(pageSize, pages) {
       const that = this;
       this.$fetch
@@ -131,6 +123,42 @@ export default {
           console.log(error);
         });
     },
+    // 点击编辑-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'questionManage/questionDetail', query: {questionId: id}})
+    },
+    // 忽略问题
+    ignoreQuestion(question_id, question_status){
+      const that = this;
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+         if(dismiss.value){
+           that.$fetch.post('/admin/Question_manage/saveQuestion', {
+             token: that.$stores.getToken(),
+             question_id: question_id,
+             question_status: question_status,
+           })
+           .then(res => {
+             console.log(nav_status)
+            //  if(nav_status === 1){ that.navData.nav_status == '不显示'}
+            //  if(nav_status === 2){ that.navData.nav_status == '显示'}
+             that.getData();
+           })
+           .catch(error => {
+             console.log(error)
+           })
+         }else {
+           return ;
+         }
+      })
+    },
     handlePage(value) {
       this.pages = value;
       this.changePage();
@@ -143,9 +171,6 @@ export default {
     changePage() {
       const vm = this;
       this.getData(vm.pageSize, vm.pages);
-    },
-    _nowPageSize(index) {
-      this.pageSize = index;
     },
   },
   created() {

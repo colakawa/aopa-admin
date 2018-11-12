@@ -88,11 +88,9 @@
                   nav_id: this.nav_id
                 })
                 .then(res => {
-                  that.formValidate.nav_name = res.data.nav_name;
-                  that.formValidate.url = res.data.url;
-                  that.formValidate.pid = res.data.pid;
-                  that.formValidate.nav_status = res.data.nav_status;
-                  that.formValidate.rank = res.data.rank;
+                  for(let i in that.formValidate){
+                    that.formValidate[i] = res.data[i];
+                  }
                   console.log(res, 'res');
                 })
                 .catch(error => {

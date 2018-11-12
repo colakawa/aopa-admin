@@ -44,7 +44,7 @@
                         { required: true, message: 'Please select the city', trigger: 'change' }
                     ],
                     rank: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: 'Please select gender', trigger: 'none' }
                     ],
                     status: [
                         { required: true, message: 'Please select gender', trigger: 'change' }
@@ -74,10 +74,9 @@
                   air_url_id: this.airUrlId
                 })
                 .then(res => {
-                  that.formValidate.airport_name = res.data.airport_name;
-                  that.formValidate.air_url = res.data.air_url;
-                  that.formValidate.status = res.data.status;
-                  that.formValidate.rank = res.data.rank;
+                  for(let i in that.formValidate){
+                    that.formValidate[i] = res.data[i];
+                  }
                   console.log(res, 'res');
                 })
                 .catch(error => {

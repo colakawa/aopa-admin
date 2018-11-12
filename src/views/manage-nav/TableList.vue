@@ -28,7 +28,7 @@
                 @click="routerDetail(item.nav_id)">编辑</span>
               <span v-if="item.nav_status == '不显示'" @click="changeStatus(item.nav_id, 1)">显示</span>
               <span v-if="item.nav_status == '显示'" @click="changeStatus(item.nav_id, 2)">不显示</span>
-              <span v-if="item.nav_status == '显示' || item.nav_status == '不显示'">删除</span>
+              <span v-if="item.nav_status == '显示' || item.nav_status == '不显示'" @click="modal2=true">删除</span>
               <span v-if="item.nav_status == '已删除'">查看</span>
             </td>
             <td>{{ item.add_time }}</td>
@@ -38,6 +38,21 @@
         </tbody>
       </table>
     </div>
+
+    <Modal v-model="modal2" width="360">
+        <p slot="header" style="color:#f60;text-align:center">
+            <Icon type="ios-information-circle"></Icon>
+            <span>确定要执行此操作吗?</span>
+        </p>
+        <div style="text-align:center">
+            <p>确定要执行此操作吗?</p>
+        </div>
+        <div slot="footer">
+            <Button type="error" size="large">Delete</Button>
+            <Button type="error" size="large">Delete</Button>
+        </div>
+    </Modal>
+
   </div>
 </template>
 
@@ -51,16 +66,6 @@ export default {
     };
   },
   methods: {
-    handleUserStatus(index) {
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    // remove(index) {
-    //   this.data6.splice(index, 1);
-    // },
     //----------获取列表数据------------//
     getData(pageSize, pages) {
       const that = this;
@@ -80,25 +85,38 @@ export default {
     },
     // 点击编辑-----路由跳转
     routerDetail(id){
-      this.$router.push({path: 'navManage/navDeatail', query: {navId: id}})
+      this.$router.push({path: 'navManage/navDetail', query: {navId: id}})
     },
     // 操作导航显示状态
     changeStatus(nav_id, nav_status) {
       const that = this;
-      // that.$layer.alert("找不到对象！");
-      this.$fetch.post('/admin/Nav_manage/saveNav', {
-        token: this.$stores.getToken(),
-        nav_id: nav_id,
-        nav_status: nav_status,
-      })
-      .then(res => {
-        console.log(nav_status)
-        if(nav_status === 1){ this.navData.nav_status == '不显示'}
-        if(nav_status === 2){ this.navData.nav_status == '显示'}
-        this.getData();
-      })
-      .catch(error => {
-        console.log(error)
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+         if(dismiss.value){
+           that.$fetch.post('/admin/Nav_manage/saveNav', {
+             token: that.$stores.getToken(),
+             nav_id: nav_id,
+             nav_status: nav_status,
+           })
+           .then(res => {
+             console.log(nav_status)
+             if(nav_status === 1){ that.navData.nav_status == '不显示'}
+             if(nav_status === 2){ that.navData.nav_status == '显示'}
+             that.getData();
+           })
+           .catch(error => {
+             console.log(error)
+           })
+         }else {
+           return ;
+         }
       })
     },
   },

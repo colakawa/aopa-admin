@@ -1,7 +1,7 @@
 <template>
   <div class="table-wrap">
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">机场管理<span class="add-button" @click="routerDetail('')">+添加</span></p>
       <table class="table-data">
         <thead>
           <tr>
@@ -27,7 +27,8 @@
             <td>{{ item.url }}</td>
             <td>{{ item.carousel_status_msg }}</td>
             <td class="table-operation">
-              <span v-if="item.carousel_status == '1' || item.carousel_status == '2'">编辑</span>
+              <span v-if="item.carousel_status == '1' || item.carousel_status == '2'"
+              @click="routerDetail(item.carousel_id)">编辑</span>
               <span v-if="item.carousel_status == '2'">显示</span>
               <span v-if="item.carousel_status == '1'">不显示</span>
               <span v-if="item.carousel_status == '1' || item.carousel_status == '2'">删除</span>
@@ -74,6 +75,7 @@ export default {
     remove(index) {
       this.data6.splice(index, 1);
     },
+    // 获取列表数据
     getData(pageSize, pages) {
       const that = this;
       this.$fetch
@@ -105,8 +107,9 @@ export default {
       const vm = this;
       this.getData(vm.pageSize, vm.pages);
     },
-    _nowPageSize(index) {
-      this.pageSize = index;
+    // 点击编辑-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'carouselManage/carouselDetail', query: {carouselId: id}})
     },
   },
   created() {

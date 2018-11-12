@@ -33,23 +33,29 @@ const CarouselTablelist = () =>
 
 // 三级路由
 
-const CarouselDeatail = () =>
-  import(/* webpackChunkName: "CarouselDeatail" */ '@/views/manage-carousel/details/carouselDetail.vue');
+const CarouselDetail = () =>
+  import(/* webpackChunkName: "CarouselDetail" */ '@/views/manage-carousel/details/carouselDetail.vue');
 
-const NavDeatail = () =>
-  import(/* webpackChunkName: "NavDeatail" */ '@/views/manage-nav/details/navDetail.vue');
+const NavDetail = () =>
+  import(/* webpackChunkName: "NavDetail" */ '@/views/manage-nav/details/navDetail.vue');
 
-const DownloadDeatail = () =>
-  import(/* webpackChunkName: "DownloadDeatail" */ '@/views/manage-download/details/downloadDetail.vue');
+const DownloadDetail = () =>
+  import(/* webpackChunkName: "DownloadDetail" */ '@/views/manage-download/details/downloadDetail.vue');
 
-const UrlDeatail = () =>
-  import(/* webpackChunkName: "UrlDeatail" */ '@/views/manage-url/details/urlDetail.vue');
+const UrlDetail = () =>
+  import(/* webpackChunkName: "UrlDetail" */ '@/views/manage-url/details/urlDetail.vue');
 
-const AirportDeatail = () =>
-  import(/* webpackChunkName: "AirportDeatail" */ '@/views/manage-airport/details/airportDetail.vue');
+const QuestionDetail = () =>
+  import(/* webpackChunkName: "QuestionDetail" */ '@/views/manage-question/details/questionDetail.vue');
 
-const EvidenceDeatail = () =>
-  import(/* webpackChunkName: "EvidenceDeatail" */ '@/views/manage-evidence/details/evidenceDetail.vue');
+const AirportDetail = () =>
+  import(/* webpackChunkName: "AirportDetail" */ '@/views/manage-airport/details/airportDetail.vue');
+
+const UserDetail = () =>
+    import(/* webpackChunkName: "UserDetail" */ '@/views/manage-user/details/userDetail.vue');
+
+const EvidenceDetail = () =>
+  import(/* webpackChunkName: "EvidenceDetail" */ '@/views/manage-evidence/details/evidenceDetail.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "Login" */ '@/views/user/login.vue');
@@ -67,8 +73,21 @@ export default new Router({
       children: [
         {
           path: '/',
-          name: 'UserTablelist',
-          component: UserTablelist,
+          name: '用户管理',
+          redirect: '/userManage',
+          component: RouterView,
+          children: [
+            {
+              path: '/',
+              name: '',
+              component: UserTablelist,
+            },
+            {
+              path: 'userDetail',
+              name: '用户详情',
+              component: UserDetail,
+            },
+          ],
         },
         {
           path: 'airportManage',
@@ -82,9 +101,9 @@ export default new Router({
               component: AirportTablelist,
             },
             {
-              path: 'airportDeatail',
+              path: 'airportDetail',
               name: '机场详情',
-              component: AirportDeatail,
+              component: AirportDetail,
             },
           ],
         },
@@ -100,22 +119,37 @@ export default new Router({
               component: EvidenceTablelist,
             },
             {
-              path: 'evidenceDeatail',
+              path: 'evidenceDetail',
               name: '取证机场详情',
-              component: EvidenceDeatail,
+              component: EvidenceDetail,
             },
           ],
         },
+        // 问题管理
         {
           path: 'questionManage',
-          name: 'QuestionTablelist',
-          component: QuestionTablelist,
+          name: '问题管理',
+          redirect: '/questionManage',
+          component: RouterView,
+          children: [
+            {
+              path: '/',
+              name: '',
+              component: QuestionTablelist,
+            },
+            {
+              path: 'questionDetail',
+              name: '取证机场详情',
+              component: QuestionDetail,
+            },
+          ],
         },
         {
           path: 'noticeManage',
           name: 'NoticeTablelist',
           component: NoticeTablelist,
         },
+        // url管理
         {
           path: 'urlManage',
           name: 'url管理',
@@ -128,12 +162,13 @@ export default new Router({
               component: UrlTablelist,
             },
             {
-              path: 'urlDeatail',
+              path: 'urlDetail',
               name: 'url详情',
-              component: UrlDeatail,
+              component: UrlDetail,
             },
           ],
         },
+        // 下载管理
         {
           path: 'downloadManage',
           name: '下载管理',
@@ -146,12 +181,13 @@ export default new Router({
               component: DownloadTablelist,
             },
             {
-              path: 'downloadDeatail',
+              path: 'downloadDetail',
               name: '下载详情',
-              component: DownloadDeatail,
+              component: DownloadDetail,
             },
           ],
         },
+        // 导航管理
         {
           path: 'navManage',
           name: '导航管理',
@@ -164,12 +200,13 @@ export default new Router({
               component: NavTablelist,
             },
             {
-              path: 'navDeatail',
+              path: '/navDetail',
               name: '导航详情',
-              component: NavDeatail,
+              component: NavDetail,
             },
           ],
         },
+        // 轮播图管理
         {
           path: 'carouselManage',
           name: '轮播管理',
@@ -182,9 +219,9 @@ export default new Router({
               component: CarouselTablelist,
             },
             {
-              path: 'carouselDeatail',
+              path: 'carouselDetail',
               name: '轮播详情',
-              component: CarouselDeatail,
+              component: CarouselDetail,
             },
           ],
         },

@@ -116,13 +116,13 @@
             <td>{{ item.mobile_phone }}</td>
             <td>{{ item.status }}</td>
             <td class="table-operation">
-              <span v-if="item.status == '冻结' || item.status == '下线'">上线</span>
-              <span v-if="item.status == '已发布' || item.status == '在线' || item.status == '已取证'">下线</span>
-              <!-- <span>冻结</span>
-              <span>解冻</span> -->
+              <span @click="handleStatus(item.airid, item.status)"
+                v-if="item.status == '冻结' || item.status == '下线'">上线</span>
+              <span @click="handleStatus(item.airid, item.status)"
+                v-if="item.status == '已发布' || item.status == '在线' || item.status == '已取证'">下线</span>
               <span v-if="item.status == '已发布' || item.status == '在线'">变更所属</span>
               <span v-if="item.type == '1'">查看</span>
-              <span v-if="item.type == '2'">编辑</span>
+              <span v-if="item.type == '2'" @click="routerDetail(item.airid)">编辑</span>
             </td>
             <td>{{ item.release_time }}</td>
             <td>{{ item.save_time }}</td>
@@ -142,7 +142,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -192,17 +191,7 @@ export default {
     };
   },
   methods: {
-    handleUserStatus(index) {
-      console.log(this.$Modal);
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    remove(index) {
-      this.data6.splice(index, 1);
-    },
+    // 获取列表数据
     getData(pageSize, pages) {
       const that = this;
       this.$fetch.post('admin/Airport_manage/AdminAirportInfo', {
@@ -218,6 +207,10 @@ export default {
         console.log(error);
       });
     },
+     // 点击编辑-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'airportManage/airportDetail', query: {airId: id}})
+    },
     handlePage(value) {
       this.pages = value;
       this.changePage();
@@ -231,12 +224,38 @@ export default {
       const vm = this;
       this.getData(vm.pageSize, vm.pages);
     },
-    _nowPageSize(index) {
-      this.pageSize = index;
-    },
     changeCertificateUnit(val, type) {
       console.log(val, '123');
     },
+    // 操作
+    handleStatus(airid, status){
+      const that = this;
+      this.$swal({
+        title: '确定要执行此操作吗？',
+        text: '',
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定！",
+        cancelButtonText:"取消",
+      }).then((dismiss) => {
+         if(dismiss.value){
+           that.$fetch.post('/admin/Airport_manage/saveAirportStatus', {
+             token: that.$stores.getToken(),
+             airid: airid,
+             status: status,
+           })
+           .then(res => {
+             that.getData();
+           })
+           .catch(error => {
+             console.log(error)
+           })
+         }else {
+           return ;
+         }
+      })
+    }
   },
   created() {
     this.getData();
