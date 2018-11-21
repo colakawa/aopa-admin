@@ -4,8 +4,11 @@
         <FormItem label="轮播图片标题" prop="carousel_title">
             <Input v-model="formValidate.carousel_title" placeholder="请输入文本"></Input>
         </FormItem>
-        <FormItem label="图片地址" prop="mail">
-            <Input v-model="formValidate.mail" placeholder="请输入文本"></Input>
+        <FormItem label="图片地址" prop="carousel_img_url">
+            <!-- <Input v-model="formValidate.carousel_img_url" placeholder="请输入文本"></Input> -->
+            <part-upload
+              v-model="formValidate.carousel_img_url"
+              :imagesList="formValidate.carousel_img_url"></part-upload>
         </FormItem>
          <FormItem label="排序" prop="sort">
             <Input v-model="formValidate.sort" placeholder="请输入文本"></Input>
@@ -18,7 +21,6 @@
                 <Option v-for="status in statusList"
                 :key="status.id"
                 :value="status.id"> {{status.name}} </Option>
-
             </Select>
         </FormItem>
         <FormItem>
@@ -28,7 +30,11 @@
     </Form>
 </template>
 <script>
+import PartUpload from '../../../components/templatework/partUpload.vue'
     export default {
+      components: {
+        PartUpload
+      },
         data () {
             return {
                 carousel_id: '',
@@ -37,7 +43,7 @@
                     sort: '',
                     url: '',
                     carousel_status: '',
-                    // desc: ''
+                    carousel_img_url: ''
                 },
                 ruleValidate: {
                     carousel_title: [
@@ -56,7 +62,7 @@
                 statusList:[
                   {id: 1, name: '正常'},
                   {id: 2, name: '删除'},
-                ]
+                ],
             }
         },
         methods: {
@@ -84,7 +90,9 @@
                   for(let i in that.formValidate){
                     that.formValidate[i] = res.data[i];
                   }
-                  console.log(res, 'res');
+                  that.formValidate.carousel_img_url = res.data.carousel_img_url.split(',');
+                  // console.log(res, 'res');
+                  console.log( that.formValidate.carousel_img_url)
                 })
                 .catch(error => {
                   console.log(error);
