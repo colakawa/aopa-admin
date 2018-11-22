@@ -6,11 +6,11 @@
         <Row>
           <Col span="6">
           <span>关键词</span>
-          <input type="text" placeholder="模糊匹配查询" id="question_content_filter" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.question_content">
             </Col>
           <Col span="5" class="">
           <span>问题类型</span>
-          <select name="question_type_filter" class="filter-select">
+          <select name="question_type_filter" class="filter-select" v-model="param.question_type">
             <option value="" selected>全部</option>
             <option value="1">机场取证</option>
             <option value="2">机场信息发布</option>
@@ -23,7 +23,7 @@
             </Col>
           <Col span="5">
           <span>问题状态</span>
-          <select name="question_status_filter" class="filter-select" id="question_status_filter">
+          <select name="question_status_filter" class="filter-select" v-model="param.question_status">
             <option value="" selected>全部</option>
             <option value="1">未处理</option>
             <option value="2">已处理</option>
@@ -34,15 +34,15 @@
         <Row>
           <Col span="6">
           <span>提出人</span>
-          <input type="text" placeholder="模糊匹配查询" id="real_name_filter" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.real_name">
               </Col>
           <Col span="6">
           <span>联系电话</span>
-          <input type="text" placeholder="模糊匹配查询" id="mobile_phone_filter" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.mobile_phone">
               </Col>
           <Col span="3" class="filter-search-btn">
-              查询
-              </Col>
+              <span @click="handleSearch">查询</span>
+          </Col>
         </Row>
       </div>
     </div>
@@ -101,15 +101,27 @@ export default {
       pageSize: 10, // 每页显示条数
       totalNum: 0, // 总条数
       pages: 1, // 当前页
+      param: {
+          question_content: '',
+          question_type: '',
+          question_status: '',
+          real_name: '',
+          mobile_phone: '',
+      }
     };
   },
   methods: {
     // 获取列表数据
-    getData(pageSize, pages) {
+    getData(pageSize, pages, param) {
       const that = this;
       this.$fetch
         .post('admin/Question_manage/getQuestionList', {
           token: this.$stores.getToken(),
+          question_content: param.question_content,
+          question_type: param.question_type,
+          question_status: param.question_status,
+          real_name: param.real_name,
+          mobile_phone: param.mobile_phone,
           pages,
           page_num: pageSize,
         })
@@ -122,6 +134,12 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+     // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getData(vm.pageSize, vm.pages, vm.param);      
     },
     // 点击编辑-----路由跳转
     routerDetail(id){
@@ -174,7 +192,7 @@ export default {
     },
   },
   created() {
-    this.getData();
+    this.getData(this.pageSize, this.pages, this.param);
   },
 };
 </script>

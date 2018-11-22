@@ -5,26 +5,26 @@
       <div class="filter-left">
         <Row>
           <Col span="6">
-          <span>手机号码</span>
-          <input type="text" placeholder="模糊匹配查询" id="admin_info_search_phone" class="filter-input">
-            </Col>
+              <span>手机号码</span>
+              <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="mobile_phone">
+          </Col>
           <Col span="6">
-          <span>真实姓名</span>
-          <input type="text" placeholder="模糊匹配查询" id="admin_info_search_name" class="filter-input">
-            </Col>
+              <span>真实姓名</span>
+              <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="real_name">
+          </Col>
           <Col span="5" class="">
           <span>性别</span>
-          <select name="sex" id="sex" class="filter-select">
-            <option value="">全部</option>
-            <option value="1">男</option>
-            <option value="2">女</option>
+          <select name="sex" id="sex" class="filter-select" v-model="sex">
+              <option value="">全部</option>
+              <option value="1">男</option>
+              <option value="2">女</option>
           </select>
             </Col>
         </Row>
         <Row>
           <Col span="5">
           <span>用户类型</span>
-          <select name="usergroupid" class="filter-select" id="usergroupid">
+          <select name="usergroupid" class="filter-select" v-model="usergroupid">
             <option value="">全部</option>
             <option value="2">普通用户</option>
             <option value="1">机场信息管理员</option>
@@ -32,15 +32,15 @@
               </Col>
           <Col span="6">
           <span>用户状态</span>
-          <select name="user_status" id="user_status" class="filter-select">
+          <select name="user_status" class="filter-select" v-model="user_status">
             <option value="">全部</option>
             <option value="9">冻结</option>
             <option value="1">正常</option>
           </select>
               </Col>
           <Col span="3" class="filter-search-btn">
-              查询
-              </Col>
+              <span @click="handleSearch">查询</span>
+          </Col>
         </Row>
       </div>
     </div>
@@ -82,7 +82,7 @@
       </table>
       <Page
         :total="totalNum"
-        :page-size="pageSize"
+        :page-size="page_num"
         :current="pages"
         @on-change="handlePage"
         @on-page-size-change="handlePageSize"
@@ -97,9 +97,14 @@ export default {
   data() {
     return {
       userData: [],
-      pageSize: 10, // 每页显示条数
+      page_num: 10, // 每页显示条数
       totalNum: 0, // 总条数
       pages: 1, // 当前页
+      mobile_phone: '',
+      real_name: '',
+      sex: '',
+      usergroupid: '',
+      user_status: '',
     };
   },
   methods: {
@@ -114,13 +119,18 @@ export default {
       this.data6.splice(index, 1);
     },
     // 获取列表数据
-    getData(pageSize, pages) {
+    getData(page_num, pages, mobile_phone, real_name, sex, usergroupid, user_status) {
       const that = this;
       this.$fetch
         .post('admin/index/adminUserInfo', {
           token: this.$stores.getToken(),
+          mobile_phone,
+          real_name,
+          sex,
+          usergroupid,
+          user_status,
           pages,
-          page_num: pageSize,
+          page_num,
         })
         .then(res => {
           that.userData = res.data;
@@ -165,18 +175,24 @@ export default {
     routerDetail(id){
       this.$router.push({path: '/userDetail', query: {userId: id}})
     },
+    // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getData(this.page_num, this.pages, this.mobile_phone, this.real_name, this.sex, this.usergroupid, this.user_status);
+    },
     handlePage(value) {
       this.pages = value;
       this.changePage();
     },
     handlePageSize(value) {
-      this.pageSize = value;
+      this.page_num = value;
       this.changePage();
     },
     // 点击切换分页
     changePage() {
       const vm = this;
-      this.getData(vm.pageSize, vm.pages);
+      this.getData(vm.page_num, vm.pages, this.mobile_phone, this.real_name, this.sex, this.usergroupid, this.user_status);
     },
   },
   created() {

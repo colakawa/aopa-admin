@@ -6,17 +6,17 @@
         <Row>
           <Col span="6">
           <span>公告标题</span>
-          <input type="text" placeholder="模糊匹配查询" name="notice_title" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" name="notice_title" class="filter-input" v-model="param.notice_title">
             </Col>
           <Col span="16" class="">
           <span>发布时间</span>
-          <DatePicker type="datetime" placeholder="Select date and time" style="width: 200px"></DatePicker>
+          <DatePicker type="date" placeholder="YYYY-MM-DD" style="width: 200px"  v-model="param.start_time"></DatePicker>
           <span>至</span>
-          <DatePicker type="datetime" placeholder="Select date and time" style="width: 200px"></DatePicker>
+          <DatePicker type="date" placeholder="YYYY-MM-DD" style="width: 200px"  v-model="param.end_time"></DatePicker>
             </Col>
           <Col span="2" class="filter-search-btn">
-              查询
-            </Col>
+              <span @click="handleSearch">查询</span>
+          </Col>
         </Row>
       </div>
     </div>
@@ -74,6 +74,11 @@ export default {
       pageSize: 10, // 每页显示条数
       totalNum: 0, // 总条数
       pages: 1, // 当前页
+      param: {
+          notice_title: '',
+          start_time: '',
+          end_time: '',
+      }
     };
   },
   methods: {
@@ -87,11 +92,15 @@ export default {
     remove(index) {
       this.data6.splice(index, 1);
     },
-    getData(pageSize, pages) {
+    // 获取数据
+    getData(pageSize, pages, param) {
       const that = this;
       this.$fetch
         .post('admin/Notice_manage/getNoticeList', {
           token: this.$stores.getToken(),
+          notice_title: param.notice_title,
+          start_time: param.start_time,
+          end_time: param.end_time,
           pages,
           page_num: pageSize,
         })
@@ -104,6 +113,12 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+     // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getData(vm.pageSize, vm.pages, vm.param);      
     },
     handlePage(value) {
       this.pages = value;
@@ -123,7 +138,7 @@ export default {
     },
   },
   created() {
-    this.getData();
+    this.getData(this.pageSize, this.pages, this.param);
   },
 };
 </script>

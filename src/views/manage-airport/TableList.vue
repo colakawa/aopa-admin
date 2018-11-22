@@ -6,7 +6,7 @@
         <Row>
           <Col span="6">
           <span>机场名称</span>
-          <input type="text" placeholder="模糊匹配查询" id="admin_airport_search_text" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.airport_name">
             </Col>
           <Col span="5" class="">
           <span>机场类型</span>
@@ -14,7 +14,7 @@
             name="other_airport_type1"
             id="other_airport_type"
             class="filter-select"
-            v-model="value">
+            v-model="param.other_airport_type">
             <!--1.通用机场  2.运输机场 3.其他起降场地-->
             <option value="">机场类别（全部）</option>
             <option value="1">通用机场</option>
@@ -23,8 +23,8 @@
           </select>
             </Col>
           <!--机场类型-->
-          <Col span="8" v-if="value == '1'">
-          <select name="airport_type" id="airport_type" class="filter-select">
+          <Col span="8" v-if="param.other_airport_type == '1'">
+          <select name="airport_type" class="filter-select" v-model="param.airport_type">
             <option
               v-for="airportType in airportTypeList"
               :key="airportType"
@@ -32,9 +32,9 @@
             >{{ airportType.name }}</option>
           </select>
             </Col>
-          <Col span="4" v-if="value == '1'">
+          <Col span="4" v-if="param.other_airport_type == '1'">
           <!--A1 A2 A3 B -->
-          <select name="airport_rank" id="airport_rank" class="filter-select">
+          <select name="airport_rank" class="filter-select" v-model="param.airport_rank">
             <option value="">机场类/级别（全部）</option>
             <option value="1">A1</option>
             <option value="2">A2</option>
@@ -46,11 +46,11 @@
         <Row>
           <Col span="6">
           <span>运营人&nbsp;&nbsp;</span>
-          <input type="text" placeholder="模糊匹配查询" id="admin_search_text" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.airport_run">
               </Col>
           <Col span="5">
           <span>机场状态</span>
-          <select name="status" class="filter-select" id="status">
+          <select name="status" class="filter-select" v-model="param.status">
             <option value="">机场状态（全部）</option>
             <option value="2">已发布</option>
             <option value="3">已取证</option>
@@ -63,9 +63,8 @@
           <span>所在地区</span>
           <select
             name="certificate_unit"
-            id="certificate_unit"
             class="filter-select"
-            v-model="certificateUnitId">
+            v-model="param.certificate_unit">
             <option
               v-for="certificateUnit in certificateUnitList"
               :value="certificateUnit.id"
@@ -73,22 +72,25 @@
           </select>
               </Col>
           <Col span="6">
-          <select name="province_id" id="province_id" class="filter-select">
+          <select name="province_id" class="filter-select" v-model="param.province_id">
             <!-- 省份数据 -->
             <option
-              v-for="province in provinceList[certificateUnitId]"
+              v-for="province in provinceList[param.certificate_unit]"
               :value="province"
-            >{{ province }}</option>
+            >{{ province == '' ?  '省/直辖市（全部）': province }}</option>
           </select>
               </Col>
         </Row>
       </div>
-      <div class="filter-search-btn">
+      <div class="filter-search-btn" @click="handleSearch">
             查询
       </div>
     </div>
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">机场管理
+         <span class="add-button" @click="routerDetail('')">创建机场</span> 
+         <span class="add-button">导出列表</span>
+      </p>
       <table class="table-data">
         <thead>
           <tr>
@@ -161,18 +163,18 @@ export default {
       ],
       provinceList: {
         // 地区省份二级联动
-        '': ['省/直辖市（全部）', '黑龙江省', '吉林省', '辽宁省', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省',
+        '': ['', '黑龙江省', '吉林省', '辽宁省', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省',
           '上海市', '浙江省', '山东省', '江苏省', '福建省', '江西省', '安徽省', '湖北省', '广西壮族自治区', '广东省', '河南省', '海南省',
           '湖南省', '甘肃省', '青海省', '陕西省', '宁夏回族自治区', '重庆市', '云南省', '四川省', '贵州省', '西藏自治区',
           '新疆维吾尔自治区',
         ],
-        3: ['省/直辖市（全部）', '黑龙江省', '吉林省', '辽宁省'],
-        1: ['省/直辖市（全部）', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省'],
-        4: ['省/直辖市（全部）', '上海市', '浙江省', '山东省', '江苏省', '福建省', '江西省', '安徽省'],
-        6: ['省/直辖市（全部）', '湖北省', '广西壮族自治区', '广东省', '河南省', '海南省', '湖南省'],
-        2: ['省/直辖市（全部）', '甘肃省', '青海省', '陕西省', '宁夏回族自治区'],
-        5: ['省/直辖市（全部）', '重庆市', '云南省', '四川省', '贵州省', '西藏自治区'],
-        7: ['省/直辖市（全部）', '新疆维吾尔自治区'],
+        3: ['', '黑龙江省', '吉林省', '辽宁省'],
+        1: ['', '北京市', '天津市', '内蒙古自治区', '河北省', '山西省'],
+        4: ['', '上海市', '浙江省', '山东省', '江苏省', '福建省', '江西省', '安徽省'],
+        6: ['', '湖北省', '广西壮族自治区', '广东省', '河南省', '海南省', '湖南省'],
+        2: ['', '甘肃省', '青海省', '陕西省', '宁夏回族自治区'],
+        5: ['', '重庆市', '云南省', '四川省', '贵州省', '西藏自治区'],
+        7: ['', '新疆维吾尔自治区'],
       },
       airportTypeList: [ // 机场类型
         { id: '', name: '机场类型（全部）' },
@@ -186,16 +188,34 @@ export default {
         { id: 8, name: '直升机水上平台' },
         { id: 9, name: '水上机场' },
       ],
-      certificateUnitId: '',
-      value: '',
+      param: {
+          airport_rank: '',
+          airport_type: '',
+          status: '',
+          certificate_unit: '',
+          province_id: '',
+          airport_name: '',
+          airport_run: '',
+          mobile_phone: '',
+          other_airport_type: ''
+      }
     };
   },
   methods: {
     // 获取列表数据
-    getData(pageSize, pages) {
+    getData(pageSize, pages, param) {
       const that = this;
       this.$fetch.post('admin/Airport_manage/AdminAirportInfo', {
         token: this.$stores.getToken(),
+        airport_rank: param.airport_rank,
+        airport_type: param.airport_type,
+        status: param.status,
+        certificate_unit: param.certificate_unit,
+        province_id: param.province_id,
+        airport_name: param.airport_name,
+        airport_run: param.airport_run,
+        mobile_phone: param.mobile_phone,
+        other_airport_type: param.other_airport_type,
         pages,
         page_num: pageSize,
       }).then(res => {
@@ -211,6 +231,12 @@ export default {
     routerDetail(id){
       this.$router.push({path: 'airportManage/airportDetail', query: {airId: id}})
     },
+    // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getData(vm.pageSize, vm.pages,vm.param);      
+    },
     handlePage(value) {
       this.pages = value;
       this.changePage();
@@ -222,7 +248,8 @@ export default {
     // 点击切换分页
     changePage() {
       const vm = this;
-      this.getData(vm.pageSize, vm.pages);
+      // this.getData(vm.pageSize, vm.pages);
+      vm.getData(vm.pageSize, vm.pages,vm.param);      
     },
     changeCertificateUnit(val, type) {
       console.log(val, '123');
@@ -246,7 +273,8 @@ export default {
              status: status,
            })
            .then(res => {
-             that.getData();
+            //  that.getData();
+              that.getData(this.pageSize, this.pages,this.param);
            })
            .catch(error => {
              console.log(error)
@@ -258,7 +286,7 @@ export default {
     }
   },
   created() {
-    this.getData();
+    this.getData(this.pageSize, this.pages,this.param);
   },
 };
 </script>

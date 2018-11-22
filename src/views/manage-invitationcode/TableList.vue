@@ -6,11 +6,11 @@
         <Row>
           <Col span="6">
             <span>邀请码</span>
-            <input type="text" placeholder="模糊匹配查询" name="code" class="filter-input">
+            <input type="text" placeholder="模糊匹配查询" name="code" class="filter-input" v-model="param.code">
           </Col>
           <Col span="6">
             <span>状态</span>
-            <select name="status" class="filter-select">
+            <select name="status" class="filter-select" v-model="param.status">
               <option v-for="item in statusList"
                 :key="item.id"
                 :value="item.id" >{{ item.name }}</option>
@@ -18,16 +18,19 @@
           </Col>
           <Col span="12">
             <span>生成日期</span>
-            <DatePicker type="datetime" id="create_date" placeholder="YYYY-MM-DD" style="width: 200px" v-model="create_date"></DatePicker>
+            <DatePicker type="date" placeholder="YYYY-MM-DD" style="width: 200px" v-model="param.create_date"></DatePicker>
           </Col>
         </Row>
       </div>
-      <div class="filter-search-btn">
+      <div class="filter-search-btn" @click="handleSearch">
             查询
       </div>
     </div>
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">机场管理 
+        <span class="add-button">生成邀请码</span> 
+         <span class="add-button">导出列表</span>
+      </p>
       <table class="table-data">
         <thead>
           <tr>
@@ -43,7 +46,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in airportData" :key="item.airid">
+          <tr v-for="item in codeData" :key="item.airid">
             <td>{{ item.invitation_code_id }}</td>
             <td>{{ item.invitation_code }}</td>
             <td>{{ item.status }}</td>
@@ -74,7 +77,7 @@
 export default {
   data() {
     return {
-      airportData: [],
+      codeData: [],
       pageSize: 10, // 每页显示条数
       totalNum: 0, // 总条数
       pages: 1, // 当前页
@@ -86,27 +89,45 @@ export default {
         { id: 4, name: '已发布机场信息' },
         { id: 9, name: '作废' },
       ],
-      create_date: '',
       status: '',
       code: '',
+      param: {
+          code: '',
+          status: '',
+          create_date: '',
+          remark: '',
+          type: '',
+      }
     };
   },
   methods: {
     // 获取列表数据
-    getData(pageSize, pages) {
+    getListData(pageSize, pages, param) {
       const that = this;
-      this.$fetch.post('admin/invitation/codeList', {
-        token: this.$stores.getToken(),
-        pages,
-        page_num: pageSize,
-      }).then(res => {
-        that.airportData = res.data;
-        that.totalNum = res.totalNum;
-        this.nowData = [];
-        console.log(res);
-      }).catch(error => {
-        console.log(error);
-      });
+      this.$fetch
+          .post('/admin/invitation/codeList', {
+            token: this.$stores.getToken(),
+            code: param.code,
+            status: param.status,
+            create_date: param.create_date,
+            remark: param.remark,
+            type: param.type,
+            pages,
+            page_num: pageSize,
+          }).then(res => {
+            that.codeData = res.data;
+            that.totalNum = res.totalNum;
+            this.nowData = [];
+            console.log(res);
+          }).catch(error => {
+            console.log(error);
+          });
+    },
+     // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getListData(vm.pageSize, vm.pages, vm.param);      
     },
      // 点击编辑-----路由跳转
     routerDetail(id){
@@ -123,7 +144,7 @@ export default {
     // 点击切换分页
     changePage() {
       const vm = this;
-      this.getData(vm.pageSize, vm.pages);
+      this.getListData(vm.pageSize, vm.pages);
     },
     changeCertificateUnit(val, type) {
       console.log(val, '123');
@@ -159,7 +180,7 @@ export default {
     // }
   },
   created() {
-    this.getData();
+    this.getListData(this.pageSize, this.pages, this.param);
   },
 };
 </script>

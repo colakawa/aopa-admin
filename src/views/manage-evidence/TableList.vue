@@ -6,11 +6,11 @@
         <Row>
           <Col span="6">
           <span>机场名称</span>
-          <input type="text" placeholder="模糊匹配查询" id="admin_airport_search_text" class="filter-input">
+          <input type="text" placeholder="模糊匹配查询" class="filter-input" v-model="param.airport_name">
             </Col>
           <!--机场类型-->
           <Col span="8">
-          <select name="airport_type" id="airport_type" class="filter-select">
+          <select name="airport_type" class="filter-select" v-model="param.airport_type">
             <option
               v-for="airportType in airportTypeList"
               :key="airportType.id"
@@ -20,7 +20,7 @@
             </Col>
           <Col span="4">
           <!--A1 A2 A3 B -->
-          <select name="airport_rank" id="airport_rank" class="filter-select">
+          <select name="airport_rank" class="filter-select" v-model="param.airport_rank">
             <option value="">机场类/级别（全部）</option>
             <option value="1">A1</option>
             <option value="2">A2</option>
@@ -30,7 +30,7 @@
             </Col>
         </Row>
       </div>
-      <div class="filter-search-btn">
+      <div class="filter-search-btn"  @click="handleSearch">
             查询
       </div>
     </div>
@@ -101,16 +101,22 @@ export default {
         { id: 8, name: '直升机水上平台' },
         { id: 9, name: '水上机场' },
       ],
-      certificateUnitId: '',
-      value: '',
+       param: {
+          airport_rank: '',
+          airport_type: '',
+          airport_name: '',
+      }
     };
   },
   methods: {
     // 获取列表数据
-    getListData(pageSize, pages) {
+    getListData(pageSize, pages, param) {
       const that = this;
       this.$fetch.post('admin/Promulgate_airport_manage/certificateLogList', {
         token: this.$stores.getToken(),
+        airport_rank: param.airport_rank,
+        airport_type: param.airport_type,
+        airport_name: param.airport_name,
         pages,
         page_num: pageSize,
       }).then(res => {
@@ -120,6 +126,12 @@ export default {
       }).catch(error => {
         console.log(error);
       });
+    },
+    // 搜索查询
+    handleSearch(){
+        const vm = this;
+        vm.pages = 1
+        vm.getListData(vm.pageSize, vm.pages,vm.param);      
     },
     handlePage(value) {
       this.pages = value;
@@ -132,7 +144,7 @@ export default {
     // 点击切换分页
     changePage() {
       const vm = this;
-      this.getListData(vm.pageSize, vm.pages);
+      this.getListData(vm.pageSize, vm.pages, vm.param);
     },
     changeCertificateUnit(val, type) {
       console.log(val, '123');
@@ -143,7 +155,7 @@ export default {
     },
   },
   created() {
-    this.getListData();
+    this.getListData(this.pageSize, this.pages, this.param);
   },
 };
 </script>

@@ -63,8 +63,8 @@ const UserDetail = () =>
 const EvidenceDetail = () =>
   import(/* webpackChunkName: "EvidenceDetail" */ '@/views/manage-evidence/details/evidenceDetail.vue');
 
-// const OtherAirportDetail = () =>
-//     import( /* webpackChunkName: "OtherAirportDetail" */ '@/views/manage-otherairport/details/otherairportDetail.vue');
+const OtherAirportDetail = () =>
+    import( /* webpackChunkName: "OtherAirportDetail" */ '@/views/manage-otherairport/details/otherApplyDetail.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "Login" */ '@/views/user/login.vue');
@@ -145,11 +145,11 @@ export default new Router({
               name: '',
               component: OtherAirportTablelist,
             },
-            // {
-            //   path: 'evidenceDetail',
-            //   name: '取证机场详情',
-            //   component: EvidenceDetail,
-            // },
+            {
+              path: 'otherApplyDetail',
+              name: '申请详情',
+              component: OtherAirportDetail,
+            },
           ],
         },
         // 问题管理
@@ -173,7 +173,7 @@ export default new Router({
         },
         {
           path: 'noticeManage',
-          name: 'NoticeTablelist',
+          name: '公告管理',
           component: NoticeTablelist,
         },
         // url管理
@@ -264,11 +264,6 @@ export default new Router({
               name: '',
               component: CodeTablelist,
             },
-            // {
-            //   path: 'carouselDetail',
-            //   name: '轮播详情',
-            //   component: CarouselDetail,
-            // },
           ],
         },
       ],
