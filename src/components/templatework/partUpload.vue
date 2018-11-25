@@ -12,6 +12,7 @@
             <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
         </template>
     </div>
+    <!-- <input :value="defaultList" @input="changeValue($event.target.value)"/> -->
     <Upload
         ref="upload"
         :show-upload-list="false"
@@ -64,6 +65,9 @@
             }
         },
         methods: {
+            changeValue:function(value){
+              this.defaultList = value;
+            },
             handleView (name) {
                 this.imgName = name;
                 this.visible = true;
@@ -72,14 +76,11 @@
                 const fileList = this.$refs.upload.fileList;
                 this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
             },
+            // 上传成功
             handleSuccess (res, file) {
-                // console.log(res, 'res')
-                // console.log(file, 'file')
-                this.uploadList.push(res.data.carousel_img_url)
-                // console.log(this.uploadList, '11111')
-
-                // file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-                // file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+                this.uploadList.push(res.data.carousel_img_url);
+                this.$emit('handleSuccess', this.uploadList)
+                console.log( this.uploadList)
             },
             handleFormatError (file) {
                 this.$Notice.warning({
@@ -95,7 +96,6 @@
             },
             // 上传之前
             handleBeforeUpload (e) {
-              // console.log(e, 'ee');
                 const check = this.uploadList.length < 5;
                 if (!check) {
                     this.$Notice.warning({
@@ -105,10 +105,6 @@
                 return check;
                 this.uploadData = this.token;
             },
-            updateVal: function(val) {
-               // 2、手动触发父组件的input事件并将值传给父组件
-               this.$emit('input', val);
-            }
         },
         mounted () {
             // this.uploadList = this.$refs.upload.fileList;

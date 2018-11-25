@@ -53,7 +53,7 @@
             <td>{{ item.status_desc }}</td>
             <td class="table-operation">
               <span v-if="item.status_desc == '通过' || item.status_desc == '驳回'">查看</span>
-              <span v-if="item.status_desc == '待审核'" @click="routerDetail(item.airid)">审核</span>
+              <span v-if="item.status_desc == '待审核'" @click="routerDetail(item.applyid)">审核</span>
             </td>
             <td>{{ item.add_time }}</td>
             <td>{{ item.check_time }}</td>
@@ -111,7 +111,7 @@ export default {
     },
      // 点击编辑-----路由跳转
     routerDetail(id){
-      // this.$router.push({path: 'airportManage/airportDetail', query: {airId: id}})
+      this.$router.push({path: 'otherAirportManage/otherApplyDetail', query: {applyId: id}})
     },
     handlePage(value) {
       this.pages = value;

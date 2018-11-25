@@ -104,6 +104,7 @@ import PartUpload from '../../../components/templatework/partUpload.vue'
             this.carousel_id = this.$route.query.carouselId;
             this.getData();
           }
+          // console.log(this.$emit())
         }
     }
 </script>
