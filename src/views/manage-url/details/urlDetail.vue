@@ -13,6 +13,8 @@
         <FormItem label="状态" prop="status">
             <Select v-model="formValidate.status">
                 <Option v-for="item in statusList" :value="item.id"> {{item.name}} </Option>
+                <!-- <Option value="1">显示 </Option>
+                <Option value="2"> 不显示 </Option> -->
             </Select>
         </FormItem>
         <FormItem>
@@ -25,10 +27,10 @@
     export default {
         data () {
             return {
-               airUrlId: '',
-               statusList: [
-                  {id: 1, name: '显示'},
-                  {id: 2, name: '不显示'},
+                airUrlId: '',
+                statusList: [
+                    {id: 1, name: '显示'},
+                    {id: 2, name: '不显示'},
                 ],
                 formValidate: {
                     airport_name: '',
@@ -38,16 +40,16 @@
                 },
                 ruleValidate: {
                     airport_name: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        { required: true, message: '必填', trigger: 'blur' }
                     ],
                     air_url: [
-                        { required: true, message: 'Please select the city', trigger: 'change' }
+                        { required: true, message: '必填', trigger: 'blur' }
                     ],
                     rank: [
-                        { required: true, message: 'Please select gender', trigger: 'none' }
+                        { required: true, message: '必填', trigger: 'none', type:'number' }
                     ],
                     status: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: '必填', trigger: 'none', type:'number' }
                     ],
                 }
             }
@@ -55,8 +57,30 @@
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
+                    console.log(this.formValidate, 'callback')
                     if (valid) {
-                        this.$Message.success('Success!');
+                        const that = this;
+                        this.$fetch
+                            .post('/admin/Air_url_manage/saveAirUrl', {
+                                token: this.$stores.getToken(),
+                                air_url_id: this.airUrlId,
+                                airport_name: this.formValidate.airport_name,
+                                air_url: this.formValidate.air_url,
+                                rank: this.formValidate.rank,
+                                status: this.formValidate.status,
+                            })
+                            .then(res => {
+                                that.$swal({
+                                    title: res.msg
+                                }).then((dismiss) => {
+                                    if(dismiss.value){
+                                        that.$router.push({path: '/urlManage'})
+                                    }
+                                })
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
                     } else {
                         this.$Message.error('Fail!');
                     }

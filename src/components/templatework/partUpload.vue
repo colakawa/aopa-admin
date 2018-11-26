@@ -79,7 +79,7 @@
             // 上传成功
             handleSuccess (res, file) {
                 this.uploadList.push(res.data.carousel_img_url);
-                this.$emit('handleSuccess', this.uploadList)
+                // this.$emit('handleSuccess', this.uploadList)
                 console.log( this.uploadList)
             },
             handleFormatError (file) {

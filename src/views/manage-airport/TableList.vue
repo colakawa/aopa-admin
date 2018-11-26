@@ -144,6 +144,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -273,7 +274,6 @@ export default {
              status: status,
            })
            .then(res => {
-            //  that.getData();
               that.getData(this.pageSize, this.pages,this.param);
            })
            .catch(error => {

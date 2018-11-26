@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="table-sub-wrap">
-      <p class="sub-wrap-title">机场管理</p>
+      <p class="sub-wrap-title">机场管理<span class="add-button" @click="routerDetail('')">发布公告</span></p>
       <table class="table-data">
         <thead>
           <tr>
@@ -113,6 +113,10 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+     // 点击编辑-----路由跳转
+    routerDetail(id){
+      this.$router.push({path: 'noticeManage/noticeDetail', query: {noticeId: id}})
     },
      // 搜索查询
     handleSearch(){

@@ -32,10 +32,10 @@ const CarouselTablelist = () =>
   import(/* webpackChunkName: "CarouselTablelist" */ '@/views/manage-carousel/TableList.vue');
 
 const OtherAirportTablelist = () =>
-    import(/* webpackChunkName: "OtherAirportTablelist" */ '@/views/manage-otherairport/TableList.vue');
+  import(/* webpackChunkName: "OtherAirportTablelist" */ '@/views/manage-otherairport/TableList.vue');
 
 const CodeTablelist = () =>
-      import(/* webpackChunkName: "CodeTablelist" */ '@/views/manage-invitationcode/TableList.vue');
+  import(/* webpackChunkName: "CodeTablelist" */ '@/views/manage-invitationcode/TableList.vue');
 
 // 三级路由
 
@@ -58,13 +58,16 @@ const AirportDetail = () =>
   import(/* webpackChunkName: "AirportDetail" */ '@/views/manage-airport/details/airportDetail.vue');
 
 const UserDetail = () =>
-    import(/* webpackChunkName: "UserDetail" */ '@/views/manage-user/details/userDetail.vue');
+  import(/* webpackChunkName: "UserDetail" */ '@/views/manage-user/details/userDetail.vue');
 
 const EvidenceDetail = () =>
   import(/* webpackChunkName: "EvidenceDetail" */ '@/views/manage-evidence/details/evidenceDetail.vue');
 
 const OtherAirportDetail = () =>
-    import( /* webpackChunkName: "OtherAirportDetail" */ '@/views/manage-otherairport/details/otherApplyDetail.vue');
+  import( /* webpackChunkName: "OtherAirportDetail" */ '@/views/manage-otherairport/details/otherApplyDetail.vue');
+
+const NoticeDetail = () =>
+  import(/* webpackChunkName: "NoticeDetail" */ '@/views/manage-notice/details/noticeDetail.vue');
 
 const Login = () =>
   import(/* webpackChunkName: "Login" */ '@/views/user/login.vue');
@@ -166,7 +169,7 @@ export default new Router({
             },
             {
               path: 'questionDetail',
-              name: '取证机场详情',
+              name: '问题详情',
               component: QuestionDetail,
             },
           ],
@@ -174,7 +177,20 @@ export default new Router({
         {
           path: 'noticeManage',
           name: '公告管理',
-          component: NoticeTablelist,
+          redirect: 'noticeManage',
+          component: RouterView,
+          children: [
+            {
+              path: '/',
+              name: '',
+              component: NoticeTablelist,
+            },
+            {
+              path: 'noticeDetail',
+              name: '发布公告',
+              component: NoticeDetail,
+            },
+          ],
         },
         // url管理
         {

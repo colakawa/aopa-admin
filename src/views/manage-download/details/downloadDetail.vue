@@ -6,6 +6,16 @@
         </FormItem>
         <FormItem label="下载文件地址" prop="url">
             <Input v-model="formValidate.url" placeholder="请输入文本"></Input>
+            <Upload 
+            :format="['zip','pdf']"
+            :data="uploadData"
+            name="download_url"
+            action="http://csga.aopa.org.cn/admin/Downloads_manage/uploadDownload">
+                <Button icon="ios-cloud-upload-outline">上传文件</Button>
+            </Upload>
+            <!-- <part-upload
+                v-model="formValidate.download_url"
+                :imagesList="formValidate.download_url"></part-upload> -->
         </FormItem>
         <FormItem label="下载内容类型" prop="download_type">
             <Select v-model="formValidate.download_type">
@@ -33,7 +43,11 @@
     </Form>
 </template>
 <script>
+import PartUpload from '../../../components/templatework/partUpload.vue'
     export default {
+        components: {
+            PartUpload
+        },
         data () {
             return {
                 formValidate: {
@@ -44,24 +58,29 @@
                     add_time: '',
                     update_time: ''
                 },
+                uploadData: {
+                  token: this.$stores.getToken(),
+                },
+                uploadList: [],
+                delBtn: 1,
                 ruleValidate: {
                     download_title: [
                         { required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ],
                     download_type: [
-                        { required: true, message: 'Please select the city', trigger: 'change' }
+                        { required: true, message: 'Please select the city', trigger: 'change', type: 'number' }
                     ],
                     download_status: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: 'Please select gender', trigger: 'change', type: 'number' }
                     ],
                     applying_time: [
-                        { required: true, message: 'Please select gender', trigger: 'none' }
+                        { required: true, message: 'Please select gender', trigger: 'blur', type: 'date' }
                     ],
                     add_time: [
-                        { required: true, message: 'Please select gender', trigger: 'none' }
+                        { required: true, message: 'Please select gender', trigger: 'blur', type: 'date' }
                     ],
                     update_time: [
-                        { required: true, message: 'Please select gender', trigger: 'none' }
+                        { required: true, message: 'Please select gender', trigger: 'blur', type: 'date' }
                     ],
                 },
                 download_id: '',
@@ -105,7 +124,11 @@
                 .catch(error => {
                   console.log(error);
                 });
-            }
+            },
+            // handleSuccess(){
+            //     alert(111)
+            //     this.delBtn = 0;
+            // }
         },
         created(){
           if(this.$route.query.downloadId != ''){
