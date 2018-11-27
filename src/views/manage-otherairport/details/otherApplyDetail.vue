@@ -11,10 +11,9 @@
             <td>
               <span>机场名称：</span>
               <input type="text" v-model="detailData.airport_name" />
-              <!-- <span v-model="detailData.airport_name">{{ detailData.airport_name }}</span> -->
               <span class="airport-name-btn" v-if="operate == '2' && focus != true" @click="onFocusInput">修改</span>
               <span class="airport-name-btn" v-if="operate == '2' && focus == true" @click="onBlurInput">提交修改</span>
-              <span class="airport-name-btn" v-if="operate == '2'">创建该机场</span>
+              <span class="airport-name-btn" v-if="operate == '2'" @click="handleRouterCreate('')">创建该机场</span>
               <span class="airport-name-btn" v-if="operate != '2'">查看</span>
             </td>
             <td class="border-none"> <span>申请时间：</span> {{ detailData.add_time }} </td>
@@ -35,8 +34,8 @@
               <textarea cols="40" rows="10" :value="detailData.check_user"></textarea>
               <div class="operate-btn">
                 <div class="btn-color1">存草稿</div>
-                <div :class="operate == '2' ? 'btn-color2' : 'not-click'">通过</div>
-                <div :class="operate == '2' ? 'btn-color3' : 'not-click'">保存</div>
+                <div :class="operate == '2' ? 'not-click' : 'btn-color2'">通过</div>
+                <div :class="operate == '2' ? 'not-click' : 'btn-color3'">保存</div>
               </div>
             </td>
         </tr>
@@ -64,7 +63,6 @@ export default {
       imgUrlPrefix: process.env.VUE_APP_IMG_BASE_URL,
       detailData: '',
       applyid: '',
-      // airport_name: '',
       operate: '',
       focus: false,
     }
@@ -110,13 +108,16 @@ export default {
       onBlurInput(){
         this.focus = false;
         this.getSearchRes(this.detailData.airport_name)
+      },
+      // 创建该机场
+      handleRouterCreate (id){
+          this.$router.push({path: '/airportManage/airportDetail', query: {airId: id}})        
       }
   },
   created (){
     if(this.$route.query.applyId != '' ){
       this.applyid = this.$route.query.applyId;
       this.getData();
-      // this.getSearchRes(this.detailData)
     }
   }
 }
@@ -140,7 +141,7 @@ export default {
       padding: 10px 20px;
       span{
         display: inline-block;
-        width: 100px;
+        width: 120px;
         text-align: right;
       }
     }
