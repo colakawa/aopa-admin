@@ -71,10 +71,10 @@
             <td>{{ item.mobile_phone }}</td>
             <td>{{ item.question_status_msg }}</td>
             <td class="table-operation">
-              <span v-if="item.question_status == '1'" @click="routerDetail(item.question_id)">编辑</span>
+              <span v-if="item.question_status == '1'" @click="routerDetail(item.question_id, 0)">编辑</span>
               <span v-if="item.question_status == '1'" @click="ignoreQuestion(item.question_id, item.question_status)">忽略</span>
               <span v-if="item.question_status == '2' || item.question_status == '3'"
-              @click="routerDetail(item.question_id)">查看</span>
+              @click="routerDetail(item.question_id, 1)">查看</span>
             </td>
             <td>{{ item.add_time }}</td>
             <td>{{ item.solve_time }}</td>
@@ -142,8 +142,8 @@ export default {
         vm.getData(vm.pageSize, vm.pages, vm.param);      
     },
     // 点击编辑-----路由跳转
-    routerDetail(id){
-      this.$router.push({path: 'questionManage/questionDetail', query: {questionId: id}})
+    routerDetail(id, status){
+      this.$router.push({path: 'questionManage/questionDetail', query: {questionId: id, statusId: status}})
     },
     // 忽略问题
     ignoreQuestion(question_id, question_status){
@@ -164,9 +164,6 @@ export default {
              question_status: question_status,
            })
            .then(res => {
-             console.log(nav_status)
-            //  if(nav_status === 1){ that.navData.nav_status == '不显示'}
-            //  if(nav_status === 2){ that.navData.nav_status == '显示'}
              that.getData();
            })
            .catch(error => {

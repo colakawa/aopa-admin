@@ -160,7 +160,7 @@ export default {
     // }
   },
   created() {
-    this.getData();
+    this.getData(this.pageSize, this.pages);
   },
 };
 </script>

@@ -28,8 +28,8 @@
     </div>
     <div class="table-sub-wrap">
       <p class="sub-wrap-title">机场管理 
-        <span class="add-button">生成邀请码</span> 
-         <span class="add-button">导出列表</span>
+        <span class="add-button" @click="produceCode">生成邀请码</span> 
+         <span class="add-button" @click="handleDerive">导出列表</span>
       </p>
       <table class="table-data">
         <thead>
@@ -56,7 +56,7 @@
             <td>{{ item.airid }}</td>
             <td>{{ item.remark }}</td>
             <td class="table-operation">
-              <span v-if="item.status != '作废'">作废</span>
+              <span v-if="item.status != '作废'" @click="handleNullify(item.invitation_code_id)">作废</span>
             </td>
           </tr>
         </tbody>
@@ -97,7 +97,10 @@ export default {
           create_date: '',
           remark: '',
           type: '',
-      }
+      },
+      create_num: '', // 生成邀请码数量
+      remark: '', // 生成邀请码备注
+      // invitation_code_id: '' // 作废参数
     };
   },
   methods: {
@@ -149,35 +152,55 @@ export default {
     changeCertificateUnit(val, type) {
       console.log(val, '123');
     },
-    // 操作
-    // handleStatus(airid, status){
-    //   const that = this;
-    //   this.$swal({
-    //     title: '确定要执行此操作吗？',
-    //     text: '',
-    //     type: "warning",
-    //     showCancelButton: true,
-    //     confirmButtonColor: "#DD6B55",
-    //     confirmButtonText: "确定！",
-    //     cancelButtonText:"取消",
-    //   }).then((dismiss) => {
-    //      if(dismiss.value){
-    //        that.$fetch.post('/admin/Airport_manage/saveAirportStatus', {
-    //          token: that.$stores.getToken(),
-    //          airid: airid,
-    //          status: status,
-    //        })
-    //        .then(res => {
-    //          that.getData();
-    //        })
-    //        .catch(error => {
-    //          console.log(error)
-    //        })
-    //      }else {
-    //        return ;
-    //      }
-    //   })
-    // }
+    // 生成邀请码
+    produceCode(){
+      this.$swal({
+        title: '生成邀请码',
+        html:
+          '<div style="margin: 40px 0 40px;"><span>生成邀请码数量：</span><input id="swal-create_num" class="swal-input" v-model="create_num"></div>' +
+          '<div style="margin: 0 0 40px;"><span>生成邀请码备注：</span><input id="swal-remark" class="swal-input" v-model="remark"></div>',
+        focusConfirm: false,
+        preConfirm: () => {
+            this.create_num =  document.getElementById('swal-create_num').value;
+            this.remark = document.getElementById('swal-remark').value;
+            const that = this;
+            this.$fetch
+                .post('/admin/invitation/createInvitationCode', {
+                  token: this.$stores.getToken(),
+                  create_num: this.create_num,
+                  remark: this.remark,
+                }).then(res => {
+                  that.getListData(that.pageSize, that.pages, that.param);
+                }).catch(error => {
+                  console.log(error);
+                });
+        }
+      })
+    },
+    // 作废
+    handleNullify(invitation_code_id){
+      const that = this;
+      this.$fetch
+          .post('/admin/invitation/cancel', {
+            token: this.$stores.getToken(),
+            invitation_code_id: invitation_code_id,
+          }).then(res => {
+            that.$swal({
+              title: res.msg,
+              text: '',
+            }).then(() => {
+              that.getListData(that.pageSize, that.pages, that.param);
+            })
+          }).catch(error => {
+            console.log(error);
+          });
+    },
+    // 导出列表
+    handleDerive(){
+      window.open( 'http://csga.aopa.org.cn/admin/invitation/CodeExport' + '?code=' + this.param.code
+        + '&create_date=' + this.param.create_date + '&status=' + this.param.status + '&token=' + this.$stores.getToken() 
+        + '&remark=' + this.param.remark + '&type=' + this.param.type)
+    }
   },
   created() {
     this.getListData(this.pageSize, this.pages, this.param);

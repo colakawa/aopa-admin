@@ -24,8 +24,8 @@
             <Input v-model="formValidate.rank" placeholder="请输入文本"></Input>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+            <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
         </FormItem>
     </Form>
 </template>
@@ -42,7 +42,7 @@
                 formValidate: {
                     nav_name: '',
                     url: '',
-                    pid: '',
+                    pid: 0,
                     nav_status: 1,
                     rank: ''
                 },
@@ -54,23 +54,44 @@
                         { required: true, message: '请填写url地址', trigger: 'change' }
                     ],
                     pid: [
-                        { required: true, message: '', trigger: 'none', type: 'number' }
+                        { required: true, message: '必填', trigger: 'none', type: 'number' }
                     ],
                     nav_status: [
-                        { required: true, message: '', trigger: 'none', type: 'number' }
+                        { required: true, message: '必填', trigger: 'none', type: 'number' }
                     ],
                     rank: [
-                        { required: true, message: '', trigger: 'none', type: 'number' }
+                        { required: true, message: '必填', trigger: 'none' }
                     ],
                 }
             }
         },
         methods: {
+            // 表单提交
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                      console.log(valid, 'valid')
-                        this.$Message.success('Success!');
+                        const that = this;
+                        this.$fetch
+                            .post('/admin/Nav_manage/SaveNav', {
+                                token: this.$stores.getToken(),
+                                nav_name: this.formValidate.nav_name,
+                                url: this.formValidate.url,
+                                pid: this.formValidate.pid,
+                                nav_status: this.formValidate.nav_status,
+                                rank: this.formValidate.rank
+                            })
+                            .then(res => {
+                                that.$swal({
+                                    title: res.msg,
+                                    text: ''
+                                }).then(() => {
+                                    that.$router.push({path: '/navManage'})
+                                })
+                                console.log(res, 'res');
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
                     } else {
                         this.$Message.error('Fail!');
                     }
@@ -111,7 +132,7 @@
                 .catch(error => {
                   console.log(error);
                 });
-              },
+            },
         },
         created(){
           if(this.$route.query.navId != ''){

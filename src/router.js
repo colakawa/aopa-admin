@@ -174,6 +174,7 @@ export default new Router({
             },
           ],
         },
+        // 公告管理
         {
           path: 'noticeManage',
           name: '公告管理',
@@ -243,7 +244,7 @@ export default new Router({
               component: NavTablelist,
             },
             {
-              path: '/navDetail',
+              path: 'navDetail',
               name: '导航详情',
               component: NavDetail,
             },

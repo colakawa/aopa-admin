@@ -1,6 +1,6 @@
 <template>
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
-        <p style="font-size: 18px;ont-weight: 600;text-align: center;">编辑导航</p>
+        <p style="font-size: 18px;ont-weight: 600;text-align: center;">编辑url</p>
         <FormItem label="机场名称" prop="airport_name">
             <Input v-model="formValidate.airport_name" placeholder="请输入文本"></Input>
         </FormItem>
@@ -13,13 +13,11 @@
         <FormItem label="状态" prop="status">
             <Select v-model="formValidate.status">
                 <Option v-for="item in statusList" :value="item.id"> {{item.name}} </Option>
-                <!-- <Option value="1">显示 </Option>
-                <Option value="2"> 不显示 </Option> -->
             </Select>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+            <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
         </FormItem>
     </Form>
 </template>
@@ -36,7 +34,7 @@
                     airport_name: '',
                     air_url: '',
                     rank: '',
-                    status: '',
+                    status: 1,
                 },
                 ruleValidate: {
                     airport_name: [
@@ -57,7 +55,6 @@
         methods: {
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
-                    console.log(this.formValidate, 'callback')
                     if (valid) {
                         const that = this;
                         this.$fetch
@@ -107,13 +104,28 @@
                   console.log(error);
                 });
             },
+            // 排序最大值
+            getLargeNum (){
+                const that = this;
+                this.$fetch
+                    .post('/admin/Air_url_manage/getLastAirUrlRank', {
+                        token: this.$stores.getToken(),
+                    })
+                    .then(res => {
+                        that.formValidate.rank = res.data.rank
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
         },
          created(){
             if(this.$route.query.airUrlId != ''){
-              this.airUrlId = this.$route.query.airUrlId;
+                 this.airUrlId = this.$route.query.airUrlId;
               this.getDetailData()
+            }else {
+                this.getLargeNum();
             }
-            // this.getOneNavData();
           }
     }
 </script>

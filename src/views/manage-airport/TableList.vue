@@ -249,7 +249,6 @@ export default {
     // 点击切换分页
     changePage() {
       const vm = this;
-      // this.getData(vm.pageSize, vm.pages);
       vm.getData(vm.pageSize, vm.pages,vm.param);      
     },
     changeCertificateUnit(val, type) {
