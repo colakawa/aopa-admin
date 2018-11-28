@@ -5,10 +5,10 @@
             <Input v-model="formValidate.carousel_title" placeholder="请输入文本"></Input>
         </FormItem>
         <FormItem label="图片地址" prop="carousel_img_url">
-            <!-- <Input v-model="formValidate.carousel_img_url" placeholder="请输入文本"></Input> -->
             <part-upload
               v-model="formValidate.carousel_img_url"
-              :imagesList="formValidate.carousel_img_url"></part-upload>
+              :imagesList="formValidate.carousel_img_url"
+              v-on:childByValue="childByValue"></part-upload>
         </FormItem>
          <FormItem label="排序" prop="sort">
             <Input v-model="formValidate.sort" placeholder="请输入文本"></Input>
@@ -90,21 +90,23 @@ import PartUpload from '../../../components/templatework/partUpload.vue'
                   for(let i in that.formValidate){
                     that.formValidate[i] = res.data[i];
                   }
-                  that.formValidate.carousel_img_url = res.data.carousel_img_url.split(',');
-                  // console.log(res, 'res');
-                  console.log( that.formValidate.carousel_img_url)
+                  that.formValidate.carousel_img_url = res.data.carousel_img_url.split(',').toString();
+                //   console.log( typeof(that.formValidate.carousel_img_url))
                 })
                 .catch(error => {
                   console.log(error);
                 });
-            }
+            },
+            childByValue(value){
+                console.log(value, '666666')
+                this.formValidate.carousel_img_url = value;      //在这里接受子组件传过来的参数，赋值给data里的参数
+            },
         },
         created(){
           if(this.$route.query.carouselId != ''){
             this.carousel_id = this.$route.query.carouselId;
             this.getData();
           }
-          // console.log(this.$emit())
         }
     }
 </script>

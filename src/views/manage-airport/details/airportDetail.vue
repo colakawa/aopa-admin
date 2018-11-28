@@ -11,14 +11,14 @@
             </FormItem>
             <FormItem label="机场类型" prop="airport_type" class="wrap-sub">
                 <Select v-model="formValidate.airport_type">
-                    <Option v-for="airportType in airportTypeList"
+                    <Option v-for="airportType in airportTypeList[formValidate.other_airport_type]"
                     :key="airportType.id"
                     :value="airportType.id"> {{airportType.name}} </Option>
                 </Select>
             </FormItem>
             <FormItem label="机场类/级别" prop="airport_rank" class="wrap-sub">
                 <Select v-model="formValidate.airport_rank">
-                    <Option v-for="airportRank in airportRankList"
+                    <Option v-for="airportRank in airportRankList[formValidate.other_airport_type]"
                     :key="airportRank.id"
                     :value="airportRank.id"> {{airportRank.name}} </Option>
                 </Select>
@@ -39,9 +39,9 @@
         </FormItem>
         <FormItem label="机场地理位置">
             <VDistpicker 
-            :province="getListData.province_id" 
-            :city="getListData.city_id" 
-            :area="getListData.area_id" 
+            :province="formValidate.province_id" 
+            :city="formValidate.city_id" 
+            :area="formValidate.area_id" 
             @province="onChangeProvince"  
             @city="onChangeCity"  
             @area="onChangeArea"> </VDistpicker>
@@ -80,13 +80,13 @@
             <span class="describe-content">(以世界大地测量系统1984（WGS-84）数据标定）</span>
         </p>
         <div class="position-wrap">
-            <FormItem class="wrap-sub" prop="longitude">
+            <FormItem class="wrap-sub longitude-item" prop="longitude">
                 E
                 <Input class="defined-input" v-model="longitudeArr[0]" />°
                 <Input class="defined-input" v-model="longitudeArr[1]" />′
                 <Input class="defined-input" v-model="longitudeArr[2]" />″
             </FormItem>
-            <FormItem class="wrap-sub" prop="latitude" style="margin-left: -100px;">
+            <FormItem class="wrap-sub longitude-item" prop="latitude" style="margin-left: -100px;">
                 N
                 <Input class="defined-input" v-model="latitudeArr[0]" />°
                 <Input class="defined-input" v-model="latitudeArr[1]" />′
@@ -112,9 +112,9 @@ export default {
             longitudeArr: [],
             latitudeArr: [],
             formValidate: {
-                other_airport_type: '',
-                airport_type: '',
-                airport_rank: '',
+                other_airport_type: 1,
+                airport_type: 1,
+                airport_rank: 1,
                 airport_name: '',
                 licence_num: '',
                 airport_run: '',
@@ -130,11 +130,6 @@ export default {
                 city_id: '',
                 area_id: '',
                 address: ''
-            },
-            getListData: {
-                province: '',
-                city: '',
-                district: ''  //这个参数名后端返回的和插件定义的不一样
             },
             ruleValidate: {
                 other_airport_type: [
@@ -155,12 +150,12 @@ export default {
                 certificate_unit: [
                     { required: true, message: '必填', trigger: 'blur', type:'number' }
                 ],
-                // longitude: [
-                //     { required: true, message: '必填', trigger: 'none' }
-                // ],
-                // latitude: [
-                //     { required: true, message: '必填', trigger: 'none' }
-                // ],
+                longitude: [
+                    { required: true, message: '必填', trigger: 'change' }
+                ],
+                latitude: [
+                    { required: true, message: '必填', trigger: 'change' }
+                ],
                 airport_name: [
                     { required: true, message: '必填', trigger: 'blur' }
                 ],
@@ -170,27 +165,39 @@ export default {
                 { id: 2, name: '运输机场' },
                 { id: 3, name: '其他起降场地' },
             ],
-            airportTypeList: [ // 机场类型
-                { id: 1, name: '跑道型机场' },
-                { id: 2, name: '跑道型机场（兼表面直升机场）' },
-                { id: 3, name: '跑道型机场（兼水上机场）' },
-                { id: 4, name: '跑道型机场（兼表面直升机场、水上机场）' },
-                { id: 5, name: '表面直升机场' },
-                { id: 6, name: '高架直升机场' },
-                { id: 7, name: '船上直升机场' },
-                { id: 8, name: '直升机水上平台' },
-                { id: 9, name: '水上机场' },
-                { id: 10, name: '运输机场' },
-                { id: 11, name: '其他起降场地' },
-            ],
-            airportRankList: [ // 机场类/级别
-                { id: 1, name: 'A1' },
-                { id: 2, name: 'A2' },
-                { id: 3, name: 'A3' },
-                { id: 4, name: 'B' },
-                { id: 5, name: '运输机场' },
-                { id: 6, name: '运输机场' },
-            ],
+            airportTypeList: { // 机场类型
+                1:[ 
+                    { id: 1, name: '跑道型机场' },
+                    { id: 2, name: '跑道型机场（兼表面直升机场）' },
+                    { id: 3, name: '跑道型机场（兼水上机场）' },
+                    { id: 4, name: '跑道型机场（兼表面直升机场、水上机场）' },
+                    { id: 5, name: '表面直升机场' },
+                    { id: 6, name: '高架直升机场' },
+                    { id: 7, name: '船上直升机场' },
+                    { id: 8, name: '直升机水上平台' },
+                    { id: 9, name: '水上机场' },
+                ],
+                2:[ 
+                    { id: 10, name: '运输机场' },
+                ],
+                3:[ 
+                    { id: 11, name: '其他起降场地' },
+                ],
+            },
+            airportRankList: { // 机场类/级别
+                1:[ 
+                    { id: 1, name: 'A1' },
+                    { id: 2, name: 'A2' },
+                    { id: 3, name: 'A3' },
+                    { id: 4, name: 'B' },
+                ],
+                2:[ 
+                    { id: 5, name: '运输机场' },
+                ],
+                3:[ 
+                    { id: 6, name: '其他起降场地' },
+                ],
+            },
             airportStautsList: [ // 机场状态
                 { id: 1, name: '未发布' },
                 { id: 2, name: '已发布' },
@@ -211,14 +218,12 @@ export default {
     methods: {
         handleSubmit (name) {
             this.$refs[name].validate((valid) => {
-                this.formValidate.latitude = this.latitudeArr[0] + '-' + this.latitudeArr[1] + '-' + this.latitudeArr[2]
-                this.formValidate.longitude = this.longitudeArr[0] + '-' + this.longitudeArr[1] + '-' + this.longitudeArr[2]
                 console.log(this.formValidate)
-                // if (valid) {
-                //     this.$Message.success('Success!');
-                // } else {
-                //     this.$Message.error('Fail!');
-                // }
+                if (valid) {
+                    this.$Message.success('Success!');
+                } else {
+                    this.$Message.error('Fail!');
+                }
             })
         },
         handleReset (name) {
@@ -257,6 +262,31 @@ export default {
             this.formValidate.district = data.value;
         },
     },
+    watch: {
+        longitudeArr(curVal, oldVal){ 
+            // var that = this;
+            this.formValidate.longitude = curVal[0] + '-' + curVal[1] + '-' + curVal[2]
+        },
+        latitudeArr(curVal, oldVal){ 
+            // var that = this;
+            this.formValidate.latitude = curVal[0] + '-' + curVal[1] + '-' + curVal[2]
+        },
+        formValidate: {
+            handler(val, oldVal){
+                if(val.other_airport_type == '1'){
+                    this.formValidate.airport_type = 1;
+                    this.formValidate.airport_rank = 1;
+                }else if(val.other_airport_type == '2'){
+                    this.formValidate.airport_type = 10;
+                    this.formValidate.airport_rank = 5;
+                }else if(val.other_airport_type == '3'){
+                    this.formValidate.airport_type = 11;
+                    this.formValidate.airport_rank = 6;
+                }
+            },
+            deep: true
+        }
+    },
     created(){
         if(this.$route.query.airId != ''){
             this.airid = this.$route.query.airId;
@@ -283,6 +313,9 @@ export default {
 .position-wrap {
     .wrap-sub {
         display: inline-block;
+    }
+    .longitude-item {
+        width: 46%;
     }
 }
 .defined-input {

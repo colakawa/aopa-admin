@@ -10,7 +10,7 @@
             :format="['zip','pdf']"
             :data="uploadData"
             name="download_url"
-            action="http://csga.aopa.org.cn/admin/Downloads_manage/uploadDownload">
+            action="http://www.lcsairport.com/admin/Downloads_manage/uploadDownload">
                 <Button icon="ios-cloud-upload-outline">上传文件</Button>
             </Upload>
             <!-- <part-upload

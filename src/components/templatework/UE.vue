@@ -1,62 +1,43 @@
 <template>
-    <div>
-        <div id="editor"></div>
-    </div>
-    <!-- <script  ref="editor" type="text/plain"></script> -->
+  <div>
+    <script id="editor" type="text/plain"></script>
+  </div>
 </template>
-
 <script>
-import './static/ueditor-1.4.3.3/ueditor.config';
-import './static/ueditor-1.4.3.3/ueditor.all';
-// import './static/ueditor-1.4.3.3/ueditor.parse.min';
-import './static/ueditor-1.4.3.3/lang/zh-cn/zh-cn';
-
-export default {
-    name: 'ue',
-    props: {
-        value: {
-            type: String,
-            default: ''
-        },
-        // config: {
-        //     type: Object,
-        //     default: function(){
-        //         return {
-        //             autoHeightEnabled: false,
-        //             autoFloatEnabled: true,
-        //             initialContent: "",
-        //             autoClearinitialContent: true,
-        //             initialFrameWidth: null,
-        //             initialFrameHeight: 450,
-        //             BaseUrl: "",
-        //             UEDITOR_HOME_URL: "static/ueditor-1.4.3.3/"
-        //         }
-        //     },
-        // },
+import './static/ueditor/ueditor.config.js';
+import './static/ueditor/ueditor.all';
+import './static/ueditor/ueditor.parse';
+import './static/ueditor/lang/zh-cn/zh-cn';
+  export default {
+    name: 'UE',
+    data () {
+      return {
+        editor: null
+      }
     },
-    data(){
-        return {
-            editor: null
-        }
+    props: {
+      defaultMsg: {
+        type: String
+      },
+      config: {
+        type: Object
+      }
     },
     mounted() {
-        // 实例化文本编辑器
-        // this.editor = window.UE.getEditor('editor');
-        this.ue = UE.getEditor('editor',{ 
-            BaseUrl: '', 
-            UEDITOR_HOME_URL: 'static/', 
-        }); 
-        // 设置编辑器默认内容
-        // this.editor.addListener('ready', () => {
-        //     this.editor.setContent(this.value)
-        // })
+      const _this = this;
+      this.editor = UE.getEditor('editor', this.config); // 初始化UE
+      this.editor.addListener("ready", function () {
+        _this.editor.setContent(_this.defaultMsg); // 确保UE加载完成后，放入内容。
+      });
     },
     methods: {
-        //获取编辑器中的内容
-        getUEContent () {
-            return this.editor.getContent()
-        }
+      getUEContent() { // 获取内容方法
+        return this.editor.getContent()
+      }
+    },
+    destroyed() {
+      this.editor.destroy();
     }
-}
+  }
 </script>
 

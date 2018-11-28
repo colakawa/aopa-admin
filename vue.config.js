@@ -1,7 +1,7 @@
 const path = require('path');
 
-const url = 'http://csga.aopa.org.cn/';
-// const url = 'http://www.lcsairport.com/';
+// const url = 'http://csga.aopa.org.cn/';
+const url = 'http://www.lcsairport.com/';
 
 function resolve(dir) {
   return path.join(__dirname, dir);

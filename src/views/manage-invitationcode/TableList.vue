@@ -36,6 +36,7 @@
           <tr>
             <th>ID</th>
             <th>编号</th>
+            <th>类型</th>
             <th>状态</th>
             <th>生成日期</th>
             <th>使用日期</th>
@@ -49,6 +50,7 @@
           <tr v-for="item in codeData" :key="item.airid">
             <td>{{ item.invitation_code_id }}</td>
             <td>{{ item.invitation_code }}</td>
+            <td>{{ item.type == 1 ? '已取证通用机场' : '其他起降场地'}}</td>
             <td>{{ item.status }}</td>
             <td>{{ item.create_date }}</td>
             <td>{{ item.use_date }}</td>
@@ -197,7 +199,7 @@ export default {
     },
     // 导出列表
     handleDerive(){
-      window.open( 'http://csga.aopa.org.cn/admin/invitation/CodeExport' + '?code=' + this.param.code
+      window.open( 'http://www.lcsairport.com/admin/invitation/CodeExport' + '?code=' + this.param.code
         + '&create_date=' + this.param.create_date + '&status=' + this.param.status + '&token=' + this.$stores.getToken() 
         + '&remark=' + this.param.remark + '&type=' + this.param.type)
     }

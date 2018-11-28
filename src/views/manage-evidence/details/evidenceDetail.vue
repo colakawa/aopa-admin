@@ -1,6 +1,9 @@
 <template>
     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <p style="font-size: 18px;ont-weight: 600;text-align: center;">编辑机场</p>
+        <FormItem label="邀请码" prop="invitation_code">
+            <Input v-model="formValidate.invitation_code" placeholder="请输入邀请码"></Input>
+        </FormItem>
         <FormItem label="许可证编号" prop="licence_num">
             <Input v-model="formValidate.licence_num" placeholder="请输入文本"></Input>
         </FormItem>
@@ -33,7 +36,7 @@
                 :value="certificateUnit.id"> {{certificateUnit.name}} </Option>
             </Select>
         </FormItem>
-        <FormItem label="首次颁证日期" prop="air_url">
+        <FormItem label="首次颁证日期" prop="first_certificate_time">
             <DatePicker type="date" placeholder="YYYY-MM-DD" v-model="formValidate.first_certificate_time"></DatePicker>
         </FormItem>
         <FormItem label="颁证日期" prop="certificate_time">
@@ -50,8 +53,8 @@
             <DatePicker type="date" placeholder="YYYY-MM-DD" v-model="formValidate.operation_time"></DatePicker>
         </FormItem>
         <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
-            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+            <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button> -->
         </FormItem>
     </Form>
 </template>
@@ -72,26 +75,48 @@
                     first_certificate_time: '',
                     certificate_time: '',
                     airport_status: '',
-                    operation_time: ''
+                    operation_time: '',
+                    invitation_code: '',
                 },
                 ruleValidate: {
+                    invitation_code: [
+                        { required: true, message: '必填', trigger: 'blur'}
+                    ],
+                    licence_num: [
+                        { required: true, message: '必填', trigger: 'blur'}
+                    ],
                     airport_name: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        { required: true, message: '必填', trigger: 'change' }
                     ],
-                    air_url: [
-                        { required: true, message: 'Please select the city', trigger: 'change' }
+                    address: [
+                        { required: true, message: '必填', trigger: 'change' }
                     ],
-                    rank: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                    airport_type: [
+                        { required: true, message: '必填', trigger: 'change', type: 'number' }
                     ],
-                    status: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                    airport_rank: [
+                        { required: true, message: '必填', trigger: 'change', type: 'number' }
+                    ],
+                    airport_holder: [
+                        { required: true, message: '必填', trigger: 'change' }
+                    ],
+                    airport_run: [
+                        { required: true, message: '必填', trigger: 'change' }
                     ],
                     certificate_unit: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: '必填', trigger: 'change', type: 'number' }
+                    ],
+                    first_certificate_time: [
+                        { required: true, message: '必填', trigger: 'change', type: 'date' }
+                    ],
+                    certificate_time: [
+                        { required: true, message: '必填', trigger: 'change', type: 'date' }
                     ],
                     airport_status: [
-                        { required: true, message: 'Please select gender', trigger: 'change' }
+                        { required: true, message: '必填', trigger: 'change', type: 'number' }
+                    ],
+                    operation_time: [
+                        { required: true, message: '必填', trigger: 'change', type: 'date' }
                     ],
                 },
                 statusList: [
@@ -132,7 +157,36 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('Success!');
+                        const that = this;
+                        this.$fetch
+                            .post('/admin/Promulgate_airport_manage/saveCertificateLog', {
+                                token: this.$stores.getToken(),
+                                licence_num: this.formValidate.licence_num,
+                                airport_name: this.formValidate.airport_name,
+                                address: this.formValidate.address,
+                                airport_type: this.formValidate.airport_type,
+                                airport_rank: this.formValidate.airport_rank,
+                                airport_holder: this.formValidate.airport_holder,
+                                airport_run: this.formValidate.airport_run,
+                                certificate_unit: this.formValidate.certificate_unit,
+                                first_certificate_time: this.formValidate.first_certificate_time,
+                                certificate_time: this.formValidate.certificate_time,
+                                airport_status: this.formValidate.airport_status,
+                                operation_time: this.formValidate.operation_time,
+                                invitation_code: this.formValidate.invitation_code,
+                            })
+                            .then(res => {
+                                that.$swal({
+                                    title: res.msg
+                                }).then((dismiss) => {
+                                    if(dismiss.value){
+                                        that.$router.push({path: '/evidenceManage'})
+                                    }
+                                })
+                            })
+                            .catch(error => {
+                            console.log(error);
+                            });
                     } else {
                         this.$Message.error('Fail!');
                     }

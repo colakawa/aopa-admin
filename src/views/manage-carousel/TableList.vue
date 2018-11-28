@@ -53,7 +53,6 @@
 export default {
   data() {
     return {
-      // imgUrlPrefix: 'http://ga.aopa.org.cn/carousel/',
       imgUrlPrefix: process.env.VUE_APP_IMG_BASE_URL,
       carouselData: [],
       pageSize: 10, // 每页显示条数
@@ -62,19 +61,9 @@ export default {
     };
   },
   mounted() {
-    console.log(process.env, 'process.env');
+    // console.log(process.env, 'process.env');
   },
   methods: {
-    handleUserStatus(index) {
-      this.$Modal.info({
-        title: '确定要执行此操作吗？',
-        // content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-        content: `确定要执行此操作吗？${index}`,
-      });
-    },
-    remove(index) {
-      this.data6.splice(index, 1);
-    },
     // 获取列表数据
     getData(pageSize, pages) {
       const that = this;

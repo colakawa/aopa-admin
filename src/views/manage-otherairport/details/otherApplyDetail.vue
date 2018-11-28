@@ -32,7 +32,7 @@
               <span>备注：</span>
               <p>审核人员可用于备注审核情况说明，字数不超过1000字。</p>
               <textarea cols="40" rows="10" :value="detailData.check_user"></textarea>
-              <div class="operate-btn">
+              <div class="operate-btn" v-if="statusId != '0'">
                 <div class="btn-color1">存草稿</div>
                 <div :class="operate == '2' ? 'not-click' : 'btn-color2'">通过</div>
                 <div :class="operate == '2' ? 'not-click' : 'btn-color3'">保存</div>
@@ -65,6 +65,7 @@ export default {
       applyid: '',
       operate: '',
       focus: false,
+      statusId: '',
     }
   },
   methods: {
@@ -117,6 +118,7 @@ export default {
   created (){
     if(this.$route.query.applyId != '' ){
       this.applyid = this.$route.query.applyId;
+      this.statusId = this.$route.query.statusId;
       this.getData();
     }
   }

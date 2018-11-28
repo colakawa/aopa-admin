@@ -11,8 +11,6 @@
           <Col span="5" class="">
           <span>机场类型</span>
           <select
-            name="other_airport_type1"
-            id="other_airport_type"
             class="filter-select"
             v-model="param.other_airport_type">
             <!--1.通用机场  2.运输机场 3.其他起降场地-->
@@ -24,7 +22,7 @@
             </Col>
           <!--机场类型-->
           <Col span="8" v-if="param.other_airport_type == '1'">
-          <select name="airport_type" class="filter-select" v-model="param.airport_type">
+          <select class="filter-select" v-model="param.airport_type">
             <option
               v-for="airportType in airportTypeList"
               :key="airportType"
@@ -52,10 +50,11 @@
           <span>机场状态</span>
           <select name="status" class="filter-select" v-model="param.status">
             <option value="">机场状态（全部）</option>
-            <option value="2">已发布</option>
-            <option value="3">已取证</option>
-            <option value="9">已下线</option>
-            <option value="2">在线</option>
+            <option value="1">未发布(在线未发布)</option>
+            <option value="2">已发布(在线已发布)</option>
+            <option value="3">下线</option>
+            <option value="4">在线</option>
+            <option value="5">假删</option>
           </select>
               </Col>
           <!--所在地区：1.华北；2.西北；3.东北；4.华东；5.西南；6.中南；7.新疆；-->
@@ -89,7 +88,7 @@
     <div class="table-sub-wrap">
       <p class="sub-wrap-title">机场管理
          <span class="add-button" @click="routerDetail('')">创建机场</span> 
-         <span class="add-button">导出列表</span>
+         <span class="add-button" @click="handleDerive">导出列表</span>
       </p>
       <table class="table-data">
         <thead>
@@ -122,7 +121,7 @@
                 v-if="item.status == '冻结' || item.status == '下线'">上线</span>
               <span @click="handleStatus(item.airid, item.status)"
                 v-if="item.status == '已发布' || item.status == '在线' || item.status == '已取证'">下线</span>
-              <span v-if="item.status == '已发布' || item.status == '在线'">变更所属</span>
+              <span v-if="item.status == '已发布' || item.status == '在线'" @click="changeOwnership(item.airport_name, item.airid)">变更所属</span>
               <span v-if="item.type == '1'">查看</span>
               <span v-if="item.type == '2'" @click="routerDetail(item.airid)">编辑</span>
             </td>
@@ -199,7 +198,8 @@ export default {
           airport_run: '',
           mobile_phone: '',
           other_airport_type: ''
-      }
+      },
+      mobile_phone: '',  // 变更所属--电话
     };
   },
   methods: {
@@ -223,7 +223,6 @@ export default {
         that.airportData = res.data;
         that.totalNum = res.totalNum;
         this.nowData = [];
-        console.log(res);
       }).catch(error => {
         console.log(error);
       });
@@ -282,6 +281,58 @@ export default {
            return ;
          }
       })
+    },
+    // 导出列表
+    handleDerive(){
+      window.open('http://www.lcsairport.com/admin/Airport_manage/airportExport' + '?other_airport_type=' + this.param.other_airport_type 
+        + '&airport_rank=' + this.param.airport_rank + '&airport_type=' + this.param.airport_type 
+        + '&status=' + this.param.status  + '&certificate_unit=' + this.param.certificate_unit
+        + '&province_id=' + this.param.province_id + '&airport_name=' + this.param.airport_name
+        + '&airport_run=' + this.param.airport_run + '&token=' + this.$stores.getToken())
+    },
+    // 变更所属
+    changeOwnership(airport_name, airid){
+          this.$swal({
+          title: '变更所属权',
+          html:
+            '<div style="margin: 40px 0 40px;"><span>新所属人手机号码：</span><input id="swal-mobile_phone" class="swal-input" v-model="create_num"></div>',
+          focusConfirm: false,
+          showCancelButton: true,
+          cancelButtonText: '取消',
+          confirmButtonText: '下一步',
+          preConfirm: () => {
+              this.mobile_phone = document.getElementById('swal-mobile_phone').value;
+              const that = this;
+              this.$fetch
+                  .post('/admin/Airport_manage/saveAirportTheir', {
+                    token: this.$stores.getToken(),
+                    mobile_phone: this.mobile_phone,
+                    airid: airid,
+                    airport_name: airport_name,
+                  }).then(res => {
+                    if(res.code == '200'){
+                        that.$swal({
+                            title: '变更所属权',
+                            html:
+                              '<div style="margin: 40px 0 40px;"><span>'+ airport_name +'管理权已变更为以下账户：</span></div>' +
+                              '<div style="margin: 40px 0 40px;">'+ this.mobile_phone +'</div>',
+                            focusConfirm: false,
+                            preConfirm: () => {
+                              that.getData(that.pageSize, that.pages, that.param);
+                            }
+                        })
+                    }else {
+                      if(this.mobile_phone == ''){
+                          that.$swal('电话号码不能为空')
+                      }else {
+                          that.$swal(res.msg)
+                      }
+                    }
+                  }).catch(error => {
+                    console.log(error);
+                  });
+          }
+        })
     }
   },
   created() {

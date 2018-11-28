@@ -27,7 +27,7 @@
         multiple
         name="carousel_img_url"
         type="drag"
-        action="http://csga.aopa.org.cn/admin/Carousel_manage/carouselUploadImg"
+        action="http://www.lcsairport.com/admin/Carousel_manage/carouselUploadImg"
         style="display: inline-block;width:58px;">
         <div style="width: 58px;height:58px;line-height: 58px;">
             <Icon type="ios-camera" size="20"></Icon>
@@ -42,18 +42,13 @@
     export default {
         props: {
           imagesList: {
-            type: [String, Object,Array],
-            default: []
+            type: String,
+            // default: []
           },
         },
         data () {
             return {
-                defaultList: [
-                    // {
-                    //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                    //     'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                    // },
-                ],
+                defaultList: [],
                 imgUrlPrefix: process.env.VUE_APP_IMG_BASE_URL,
                 imgName: '',
                 visible: false,
@@ -79,8 +74,7 @@
             // 上传成功
             handleSuccess (res, file) {
                 this.uploadList.push(res.data.carousel_img_url);
-                // this.$emit('handleSuccess', this.uploadList)
-                console.log( this.uploadList)
+                this.$emit('childByValue', this.uploadList)
             },
             handleFormatError (file) {
                 this.$Notice.warning({
@@ -106,8 +100,10 @@
                 this.uploadData = this.token;
             },
         },
-        mounted () {
-            // this.uploadList = this.$refs.upload.fileList;
+        created () {
+            this.uploadList.push(this.imagesList);
+            console.log(this.uploadList)
+            console.log(this.imagesList)
         }
     }
 </script>
